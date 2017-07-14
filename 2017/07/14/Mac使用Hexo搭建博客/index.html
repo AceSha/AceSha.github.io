@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="随笔/技术etc.">
+  <meta name="keyword" content="hexo-theme, vuejs">
+  <title>
+    
+      Mac使用Hexo搭建博客 | AceSha&#39;s Blog
+    
+  </title>
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdn.bootcss.com/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+  <script src="/js/qrious.js"></script>
+<script src="/js/gitment.js"></script>
+</head>
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>AceSha's Blog</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">Home</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">Tags</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">Archives</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/project/" class="item-link">Projects</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">About</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">Home</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">Tags</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">Archives</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/project/" class="menu-link">Projects</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">About</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>Mac使用Hexo搭建博客</h2>
+  <p class="post-date">2017-07-14</p>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body">
+  <article class="post-article">
+    <section class="markdown-content"><p>##环境要求<br>安装Hexo需要</p>
+<ul>
+<li><a href="https://nodejs.org/en/" target="_blank" rel="external">Node.js</a></li>
+<li><a href="https://git-scm.com" target="_blank" rel="external">Git</a></li>
+</ul>
+<p>Node.js在官网下载稳定安装包即可，Mac安装XCode后自带git。两者都具备后可参考<a href="https://hexo.io/docs/" target="_blank" rel="external">Hexo</a>官网详细安装步骤，或参照本文安装步骤。</p>
+<p>####安装Hexo<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ sudo npm install -g hexo #-g表示全局安装, npm默认为当前项目安装</div><div class="line">$ hexo version #查看</div></pre></td></tr></table></figure></p>
+<p>如遇到按以下错误开头的报错<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&#123; [Error: Cannot find module &apos;./build/Release/DTraceProviderBindings&apos;].....</div></pre></td></tr></table></figure></p>
+<p>使用以下命令安装（推荐方式）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ npm install hexo --no-optional</div></pre></td></tr></table></figure>
+<p>####初始化</p>
+<p>终端cd到一个你选定的目录&lt;#文件名&gt;，执行hexo init命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ hexo init &lt;#文件名&gt;  #执行init命令初始化到你指定的hexo目录</div><div class="line">$ cd &lt;#文件名&gt;</div></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ npm install   #install before start blogging</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ hexo g       #自动根据当前目录下文件,生成静态网页</div><div class="line">$ hexo s       #启动服务 server</div></pre></td></tr></table></figure>
+<p>浏览器<a href="http://localhost:4000" target="_blank" rel="external">http://localhost:4000</a>看到Hexo标题的网页及本地部署成功。</p>
+<p>####目录结构</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">.</div><div class="line">├── .deploy       #需要部署的文件</div><div class="line">├── node_modules  #Hexo插件</div><div class="line">├── public        #生成的静态网页文件</div><div class="line">├── scaffolds     #模板</div><div class="line">├── source        #博客正文和其他源文件, 404 favicon CNAME 等都应该放在这里</div><div class="line">|   ├── _drafts   #草稿</div><div class="line">|   └── _posts    #文章</div><div class="line">├── themes        #主题</div><div class="line">├── _config.yml   #全局配置文件</div><div class="line">└── package.json</div></pre></td></tr></table></figure>
+<p>####添加博文<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo new &quot;postName&quot;  #新建博文,其中postName是博文题目</div></pre></td></tr></table></figure></p>
+<p>博文会自动生成在博客目录下source/_posts\postName.md<br>博文结构如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">title: &quot;It Starts with iGaze: Visual Attention Driven Networkingwith Smart Glasses&quot;  #博文题目</div><div class="line">date: 2014-11-21 11:25:38      #生成时间</div><div class="line">tags:                    #标签, 多个标签也可以使用格式[tag1, tag2, tag3,...]</div><div class="line">- tag1</div><div class="line">- tag2</div><div class="line">- tag3</div><div class="line">categories: [cat1,cat2,cat3]</div><div class="line">---</div><div class="line">正文, 使用 Markdown 语法书写</div></pre></td></tr></table></figure>
+<p>如果不想博文在首页全部显示, 并能出现阅读全文按钮效果, 需要在你想在首页显示的部分下添加</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;!--more--&gt;</div></pre></td></tr></table></figure>
+<p>####主题更改<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ cd ~/git/hexo</div><div class="line">$ git clone git@github.com:yanm1ng/hexo-theme-vexo.git  themes/vexo</div></pre></td></tr></table></figure></p>
+<p>在./_config.yml，修改主题为vexo</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">theme: vexo</div></pre></td></tr></table></figure>
+<p>Hexo<a href="https://hexo.io/themes/" target="_blank" rel="external">主题列表</a></p>
+<p>查看本地效果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ hexo g</div><div class="line">$ hexo s</div></pre></td></tr></table></figure>
+<p>刷新<a href="http://localhost:4000" target="_blank" rel="external">http://localhost:4000</a></p>
+<p>####部署到GitHub<br>在GitHub新创建项目 <figure class="highlight plain"><figcaption><span>```  #固定格式，替换AceSha为你自己的用户名</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div><div class="line">打开```./_config.yml```（推荐[Atom](https://atom.io)），修改如下信息:</div></pre></td></tr></table></figure></p>
+<p>Github</p>
+<p>deploy:<br>  type: github<br>  repo: <a href="https://github.com/AceSha/AceSha.github.io.git" target="_blank" rel="external">https://github.com/AceSha/AceSha.github.io.git</a><br>  branch: master</p>
+<h1 id="修改为自己的用户名和项目名"><a href="#修改为自己的用户名和项目名" class="headerlink" title="修改为自己的用户名和项目名"></a>修改为自己的用户名和项目名</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div><div class="line">####注意事项</div><div class="line"></div><div class="line">- 所有键的冒号后面留一个空格，如language: zh-CN</div><div class="line">- url不能为空,否则报错</div><div class="line">- type: github报错hexo ERROR Deployer not found: github的解决方法：</div></pre></td></tr></table></figure>
+<p>$ npm install hexo-deployer-git –save<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">再改为```./_config.yml 内 type: git</div></pre></td></tr></table></figure></p>
+<p>完整配置信息如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div></pre></td><td class="code"><pre><div class="line"># Site #站点信息</div><div class="line">title: blog Name #标题</div><div class="line">subtitle: Subtitle #副标题</div><div class="line">description: my blog desc #描述</div><div class="line">author: me #作者</div><div class="line">language: zh-CN #语言</div><div class="line">timezone: Asia/Shanghai #时区</div><div class="line"></div><div class="line"># URL</div><div class="line">url: http://yoururl.com   #用于绑定域名, 其他的不需要配置</div><div class="line">root: /</div><div class="line">#permalink: :year/:month/:day/:title/</div><div class="line">permalink: posts/title.html</div><div class="line">permalink_defaults:</div><div class="line"></div><div class="line"># Directory #目录</div><div class="line">source_dir: source #源文件</div><div class="line">public_dir: public #生成的网页文件</div><div class="line">tag_dir: tags #标签</div><div class="line">archive_dir: archives #归档</div><div class="line">category_dir: categories #分类</div><div class="line">code_dir: downloads/code</div><div class="line">i18n_dir: :lang #国际化</div><div class="line">skip_render:</div><div class="line"></div><div class="line"># Writing #写作</div><div class="line">new_post_name: :title.md #新文章标题</div><div class="line">default_layout: post #默认模板(post page photo draft)</div><div class="line">titlecase: false #标题转换成大写</div><div class="line">external_link: true #新标签页里打开连接</div><div class="line">filename_case: 0</div><div class="line">render_drafts: false</div><div class="line">post_asset_folder: false</div><div class="line">relative_link: false</div><div class="line">future: true</div><div class="line">highlight: #语法高亮</div><div class="line">  enable: true</div><div class="line">  line_number: true #显示行号</div><div class="line">  auto_detect: true</div><div class="line">  tab_replace:</div><div class="line"></div><div class="line"># Category &amp; Tag #分类和标签</div><div class="line">default_category: uncategorized #默认分类</div><div class="line">category_map:</div><div class="line">tag_map:</div><div class="line"></div><div class="line"># Date / Time format #日期时间格式</div><div class="line">## http://momentjs.com/docs/#/displaying/format/</div><div class="line">date_format: YYYY-MM-DD</div><div class="line">time_format: HH:mm:ss</div><div class="line"></div><div class="line"># Pagination #分页</div><div class="line">per_page: 10 #每页文章数, 设置成 0 禁用分页</div><div class="line">pagination_dir: page</div><div class="line"></div><div class="line"># Extensions #插件和主题</div><div class="line">## 插件: http://hexo.io/plugins/</div><div class="line">## 主题: http://hexo.io/themes/</div><div class="line">theme: next</div><div class="line"></div><div class="line"># Deployment #部署, 同时发布在 GitHub 和 GitCafe 上面</div><div class="line">deploy:</div><div class="line">- type: git</div><div class="line">  repo: git@gitcafe.com:username/username.git,gitcafe-pages</div><div class="line">- type: git</div><div class="line">  repo: git@github.com:username/username.github.io.git,master</div><div class="line"></div><div class="line"># Disqus #Disqus评论系统</div><div class="line">disqus_shortname: </div><div class="line"></div><div class="line">plugins: #插件，例如生成 RSS 和站点地图的</div><div class="line">- hexo-generator-feed</div><div class="line">- hexo-generator-sitemap</div></pre></td></tr></table></figure>
+<p>使用以下命令部署</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo d</div></pre></td></tr></table></figure>
+</section>
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#Hexo," >
+    <span class="tag-code">Hexo,</span>
+  </a>
+
+      </div>
+    
+    <div class="money-like">
+      <div class="reward-btn">
+        赏
+        <span class="money-code">
+          <span class="alipay-code">
+            <div class="code-image"></div>
+            <b>使用支付宝打赏</b>
+          </span>
+          <span class="wechat-code">
+            <div class="code-image"></div>
+            <b>使用微信打赏</b>
+          </span>
+        </span>
+      </div>
+      <p class="notice">若你觉得我的文章对你有帮助，欢迎点击上方按钮对我打赏</p>
+    </div>
+    <div class="qrcode">
+      <canvas id="share-qrcode"></canvas>
+      <p class="notice">扫描二维码，分享此文章</p>
+    </div>
+    
+      <div id="comments"></div>
+    
+  </article>
+</main>
+
+<script>
+  (function () {
+    var url = 'http://shayuan.me/2017/07/14/Mac使用Hexo搭建博客/';
+    $('#article-banner').geopattern(url)
+    $('.header').removeClass('fixed-header')
+
+     // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png') 
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      var imageW = $(this).width()
+      var imageH = $(this).height()
+      
+      var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+      zoom = zoom < 1 ? 1 : zoom
+      zoom = zoom > 2 ? 2 : zoom
+      var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+      $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+      $('.image-view-wrap').addClass('wrap-active')
+      $('.image-view-wrap img').css({
+        'width': `${imageW}`,
+        'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+      })
+      $('html').css('overflow', 'hidden')
+
+      $('.image-view-wrap').on('click', function() {
+        $(this).remove()
+        $('html').attr('style', '')
+      })
+    })
+
+    // qrcode
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+
+    // gitment
+    var gitmentConfig = "yanm1ng";
+    if (gitmentConfig != "undefined") {
+      var gitment = new Gitment({
+        id: "Mac使用Hexo搭建博客",
+        owner: "yanm1ng",
+        repo: "yanm1ng.github.io",
+        oauth: {
+          client_id: "0f87e490e00ee3fd87ef",
+          client_secret: "4a9d2b148e7971c2201ad12131ce8bf8159ccd2e"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  })();
+</script>
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+  <p class="copyright">
+    &copy; 2017 | Proudly powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+    <br>
+    Theme by <a href="https://github.com/yanm1ng">yanm1ng</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine == 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+<!-- Baidu Tongji -->
+
+<script src="/js/script.js"></script>
+  </body>
+</html>
