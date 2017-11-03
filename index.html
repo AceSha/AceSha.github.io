@@ -285,6 +285,794 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://shayuan.me/2017/11/02/单元测试/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="shayuan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AceSha">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/11/02/单元测试/" itemprop="url">单元测试</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-02T18:06:28+08:00">
+                2017-11-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ol>
+<li>在given部分中，设置所需的任何值。在此示例中，您创建一个猜测值，以便可以指定它与targetValue值区别多大。</li>
+<li>在when部分中，执行被测试代码——调用方法gameUnderTest.check(_:)。</li>
+<li>在then部分中，断言你期望的结果</li>
+</ol>
+<p>另外，上述测试中的Given-When-Then结构来源于行为驱动测试(Behavior Driven Development，简称BDD)中的易于理解的行业术语。其实，你还可以使用另外一些命名系统，例如Arrange-Act-Assert和Assemble-Activate-Assert，等等。</p>
+<p>六、代码的可测性 — 怎样的架构适合单元测试</p>
+<p>当你不知道在哪写单元测试的时候，那你的代码就烂透了。</p>
+<p>类之间要松耦合<br>被测试的函数需要产生可测量的结果， 建议 函数式编程<br>被测试的函数要遵循单一职责<br>展示和业务逻辑要分开<br>记得重构，不断提高代码的可测性</p>
+<p>七、最佳实践</p>
+<p>每个功能类都应提供单元测试，且每一个测试类，只依赖于其要测试的受测类。使用伪造对象避免对其他类的依赖，保证一个测试类只关注一个被测类，当测试不通过时，就能迅速的定位到是谁发生了错误，而不会受到其他类的干扰；使用伪造环境避免其他环境的干扰，保证case在任何环境下都能输出同样的测试结果</p>
+<p>一个单测方法只测试一个功能点，并且不依赖其他测试用例的结果作为输入，保证case的原子性。if-else这种分支的情况最好分成两个case来测试</p>
+<p>单元测试通过数据的变化来做输出结果的验证</p>
+<p>（.h, public 的方法，内部internal 的方法）<br>应对所有暴露的属性和方法提供测试（包含回调方法），私有方法则不必。因为对外接口应该会调用到所有的私有方法，而且私有方法相对公有方法来说发生变动的可能性大很多，会造成不必要的修改测试代码的成本。如果非要测试私有方法，可以通过KVC、子类化和类别来实现</p>
+<p>TDD，测试驱动开发的妙处即在于，它以需求为引领，通过测试的形式，来指导开发者进行软件的设计与架构，并编写出最为精炼的代码，使得测试用例运行通过。经过适当的重构之后，测试用例与产品代码可达到较为健康的状态。</p>
+<p>第三方的框架有很多，OCUnit、GHUnit、Expecta、OCMock，目前我使用的OCUnit + Expecta</p>
+<p>其次，取决于项目的复杂度和依赖性，对于一个业务模型及其复杂、内部模块之间的相互依赖性非常强的项目，采用TDD反而会得不尝失，这会导致程序员在拆分接口和写测试代码的时候工作量非常大。另外，由于模块之间的依赖性太强，我们在写测试代码的时候可能不采取一些桥接模式来实现，这样势必加大了程序员的工作量。</p>
+<p>test&lt;名字&gt;&lt;状态/属性/行为&gt;</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://shayuan.me/2017/10/11/SSH/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="shayuan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AceSha">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/10/11/SSH/" itemprop="url">SSH</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-11T11:45:17+08:00">
+                2017-10-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="全局SSH"><a href="#全局SSH" class="headerlink" title="全局SSH"></a>全局SSH</h2><p>默认全局私钥：<code>id_rsa</code>,  公钥<code>id_rsa.pub</code></p>
+<ul>
+<li>检测ssh key 是否存在</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ls -al ~/.ssh</div></pre></td></tr></table></figure>
+<ul>
+<li>查看SSH 公钥</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cat ~/.ssh/id_rsa.pub</div></pre></td></tr></table></figure>
+<ul>
+<li>创建SSH, 建议生成密码，也可以忽略</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ssh-keygen -t rsa -C &quot;邮箱&quot;</div><div class="line">//使用默认操作，一路按下去</div></pre></td></tr></table></figure>
+<ul>
+<li>拷贝SSH公钥</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pbcopy &lt; ~/.ssh/id_rsa.pub</div></pre></td></tr></table></figure>
+<h2 id="多个SSH"><a href="#多个SSH" class="headerlink" title="多个SSH"></a>多个SSH</h2><p> 如果我们Mac上面已经有了ssh-key再创建ssh-key的话，需要给我们的ssh-key文件取不同的名字，默认是id_rsa，如果不重新起名的话，会把原有的给覆盖掉。</p>
+<ul>
+<li><p>新建SSH并命名</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"> //切换到ssh目录</div><div class="line">cd ~/.ssh</div><div class="line">//新建ssh-key</div><div class="line">ssh-keygen -t rsa -C  &quot;邮箱&quot;</div><div class="line"> // 创建新的rsa，需要重新命名</div><div class="line"> //为新建的ssh-key重新命名</div><div class="line"> //暂时使用 id_rsa_github</div><div class="line">Enter file in which to save the key (/Users/shayuan/.ssh/id_rsa): id_rsa_github</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p>添加新ssh-key到ssh agent中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"> //因为默认只读取id_rsa，为了让SSH识别新的私钥，需将其添加到SSH agent中：</div><div class="line">ssh-add ~/.ssh/id_rsa_github</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li>将不同的账号对应的不同的ssh key 和不同的远程服务器关联起来，这个配置是在config下配置的(如果没有config可以自己新建)。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">#thub user(first@email.com)</div><div class="line">Host github1</div><div class="line"> HostName git.some.com/</div><div class="line"> User git</div><div class="line"> IdentityFile /Users/shayuan/.ssh/id_rsa</div><div class="line"></div><div class="line"># second user(second@email.com)</div><div class="line"> # 建一个github别名，新建的帐号使用这个别名做克隆和更新</div><div class="line">Host github2</div><div class="line"> HostName github.com</div><div class="line"> User git</div><div class="line"> IdentityFile /Users/shayuan/.ssh/id_rsa_github</div></pre></td></tr></table></figure>
+<p>其规则就是：从上至下读取config的内容，在每个Host下寻找对应的私钥。这里将GitHub SSH仓库地址中的git@github.com替换成新建的Host别名如：github2，那么原地址是：git@github.com:username/Mywork.git，替换后应该是：github2:username/Mywork.git.</p>
+<ul>
+<li>在Git仓库添加SSH</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pbcopy &lt; ~/.ssh/id_rsa_github.pub</div></pre></td></tr></table></figure>
+<ul>
+<li>验证</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">ssh -T github2</div><div class="line">//或者ping地址</div><div class="line">ssh -T git@gitlab.sensenets.com</div></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://shayuan.me/2017/10/10/Jenkins-Fastlane-SwiftLint/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="shayuan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AceSha">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/10/10/Jenkins-Fastlane-SwiftLint/" itemprop="url">Jenkins+Fastlane+SwiftLint</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-10T18:27:51+08:00">
+                2017-10-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>依赖：</p>
+<ul>
+<li>ruby </li>
+<li>rvm <code>curl -sSL https://get.rvm.io | bash -s stable --ruby</code></li>
+</ul>
+<p>Jenkins搭建环境：<a href="http://www.jianshu.com/p/41ecb06ae95f" target="_blank" rel="external">http://www.jianshu.com/p/41ecb06ae95f</a><br>加slave节点：<br><a href="http://blog.devzeng.com/blog/ios-ci-with-jenkins.html" target="_blank" rel="external">http://blog.devzeng.com/blog/ios-ci-with-jenkins.html</a></p>
+<p>Jenkins重启，关闭等操作：<a href="http://blog.csdn.net/itfootball/article/details/44876517" target="_blank" rel="external">http://blog.csdn.net/itfootball/article/details/44876517</a><br>url/safe-shutdown</p>
+<p>Jenkins卸载： /Library/Application Support/Jenkins/Uninstall.command  </p>
+<p>Jenkins默认端口8080，修改Jenkins默认端口命令为： java -jar jenkins.war –httpPort=9999</p>
+<p>Jenkins目前只支持到java8，安装java9会出错， java卸载 <a href="http://blog.csdn.net/haozhugogo/article/details/54809545" target="_blank" rel="external">http://blog.csdn.net/haozhugogo/article/details/54809545</a><br>ps： 需要手动删除java9</p>
+<p>可能会出现offline的错误，需要vpn联网。</p>
+<p>添加插件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Keychains and Provisioning Profiles Management</div><div class="line">Xcode integration</div><div class="line">GitLab</div></pre></td></tr></table></figure>
+<p>配置keychain <a href="http://blog.csdn.net/taishanduba/article/details/50472591" target="_blank" rel="external">http://blog.csdn.net/taishanduba/article/details/50472591</a></p>
+<p>Jenkins配置： <a href="http://blog.csdn.net/taishanduba/article/details/61423121" target="_blank" rel="external">http://blog.csdn.net/taishanduba/article/details/61423121</a></p>
+<p>脚本打包： <a href="http://blog.csdn.net/taishanduba/article/details/50530471" target="_blank" rel="external">http://blog.csdn.net/taishanduba/article/details/50530471</a></p>
+<p>出现 fastlane: command not found 怎么办？</p>
+<p>解决方法一：这个情况一般是由于 jenkins 没有设置正确的 $PATH 环境变量导致的。正确设置的方法为：</p>
+<p>在命令行下执行 echo $PATH，记录下输出的结果<br>在 jenkins 中系统管理-系统设置中，找到 环境变量(Environment variables)<br>在 key 中填写 PATH，在 value 中填写第一步中输出的结果<br>保存即可。<br>解决方法二：请确认您安装 Jenkins 的方式和我们在本文里推荐的方式一致。使用其他方式安装的 Jenkins 也经常会出现此问题。</p>
+<h1 id="FastLane"><a href="#FastLane" class="headerlink" title="FastLane"></a>FastLane</h1><p> <a href="https://whlsxl.github.io" target="_blank" rel="external">https://whlsxl.github.io</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://shayuan.me/2017/09/18/架构相关/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="shayuan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AceSha">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/09/18/架构相关/" itemprop="url">架构相关</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-18T11:25:58+08:00">
+                2017-09-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="关于单例"><a href="#关于单例" class="headerlink" title="关于单例"></a>关于单例</h2><ul>
+<li>单例应该只用来保存全局的状态，并且不能和任何作用域绑定。</li>
+<li>理想的实现方式1：使用 AppDelegate(单例)保存属性(SingletonSet)， 在set下保存需要使用的实例，方便reset且有作用域限制。</li>
+<li>理想的实现方式1：依赖注入，显式声明。</li>
+</ul>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://shayuan.me/2017/09/07/Python学习之MySQL相关/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="shayuan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AceSha">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/09/07/Python学习之MySQL相关/" itemprop="url">Python学习之MySQL相关</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-07T11:39:29+08:00">
+                2017-09-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>Terminal操作mysql指令前的操作，这两条命令是为了方便直接打开 iTerm 就可以运行mysql命令，而不是必须进入mysql安装目录才能运行。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">1..终端中执行 vi ~/.bash_profile</div><div class="line">2.按键盘的字母i 进入编辑模式</div><div class="line">3.在末尾添加两行</div><div class="line">alias mysql=/usr/local/mysql/bin/mysql</div><div class="line">alias mysqladmin=/usr/local/mysql/bin/mysqladmin</div><div class="line">按esc键,按住shift+冒号  输入wq   即显示为:wq即可保存退出</div><div class="line">4.重新打开窗口即可操作命令</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">alias mysql=/usr/local/mysql/bin/mysql</div><div class="line">alias mysqladmin=/usr/local/mysql/bin/mysqladmin</div></pre></td></tr></table></figure>
+<p>重置密码命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mysqladmin -u root -p password newpass</div></pre></td></tr></table></figure>
+<p>newpass 是你的新密码<br>5.7的版本不会再给root用户分配默认密码，而是会给一个临时密码，如果你细心的话，安装mysql成功后会弹出一个临时密码让你保存。</p>
+<p>登录：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mysql -u root -p</div></pre></td></tr></table></figure></p>
+<p>###配置mysql数据库的字符集(防止终端操作数据库出现乱码,做系统的时候数据库乱码)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">1.进入系统偏好设置--&gt;MySql--&gt;停用mysql的服务</div><div class="line">2、在终端中执行 sudo -s</div><div class="line">3、输入电脑管理员的密码</div><div class="line">4、cp /usr/local/mysql/support-files/my-default.cnf /etc/my.cnf</div><div class="line">5、vi /etc/my.cnf</div><div class="line">   # 在打开的my.cnf文件中增加如下配置,如何操作呢?点击键盘的 i 字母,即可进入编辑模式</div><div class="line">   [client]</div><div class="line">   default-character-set = utf8 </div><div class="line">   [mysqld]</div><div class="line">   default-storage-engine = INNODB </div><div class="line">   character-set-server = utf8 </div><div class="line">   collation-server = utf8_general_ci </div><div class="line">6、按esc键</div><div class="line">7、输入 :wq</div><div class="line">8、进入系统偏好设置--&gt;MySql--&gt;重启mysql的服务</div></pre></td></tr></table></figure>
+<p>登录后查看编码类型：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">show variables like &apos;%char%&apos;;</div><div class="line"></div><div class="line"># 以下是OK的</div><div class="line">+--------------------------+--------------------------------------------------------+</div><div class="line">| Variable_name            | Value                                                  |</div><div class="line">+--------------------------+--------------------------------------------------------+</div><div class="line">| character_set_client     | utf8                                                   |</div><div class="line">| character_set_connection | utf8                                                   |</div><div class="line">| character_set_database   | utf8                                                   |</div><div class="line">| character_set_filesystem | binary                                                 |</div><div class="line">| character_set_results    | utf8                                                   |</div><div class="line">| character_set_server     | utf8                                                   |</div><div class="line">| character_set_system     | utf8                                                   |</div><div class="line">| character_sets_dir       | /usr/local/mysql-5.1.65-osx10.6-x86_64/share/charsets/ |</div><div class="line">+--------------------------+--------------------------------------------------------+</div><div class="line">8 rows in set (0.00 sec)</div></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://shayuan.me/2017/07/26/RxSwift学习/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="shayuan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AceSha">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/07/26/RxSwift学习/" itemprop="url">RxSwift学习</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-26T14:01:49+08:00">
+                2017-07-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Swift/" itemprop="url" rel="index">
+                    <span itemprop="name">Swift</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>##RxSwift使用与学习中的一些理解示例。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/07/26/RxSwift学习/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://shayuan.me/2017/07/19/Moya-HandyJson实现缺失的网络数据层/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -612,7 +1400,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-count">8</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -634,7 +1422,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-count">6</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

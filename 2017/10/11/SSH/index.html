@@ -77,7 +77,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Swift,架构," />
+  <meta name="keywords" content="Hexo, NexT" />
 
 
 
@@ -93,17 +93,16 @@
 
 
 
-<meta name="description" content="准备工作:所用到的库: Moya Alamofire HandyJSON  RxSwift   本文代码很多都是直接手写的，可能会有错误但不妨碍思维逻辑。">
-<meta name="keywords" content="Swift,架构">
+<meta name="description" content="全局SSH默认全局私钥：id_rsa,  公钥id_rsa.pub  检测ssh key 是否存在  1ls -al ~/.ssh  查看SSH 公钥  1cat ~/.ssh/id_rsa.pub  创建SSH, 建议生成密码，也可以忽略  12ssh-keygen -t rsa -C &amp;quot;邮箱&amp;quot;//使用默认操作，一路按下去  拷贝SSH公钥  1pbcopy &amp;lt; ~/.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Moya+HandyJSON实现缺失的网络数据层">
-<meta property="og:url" content="http://shayuan.me/2017/07/19/Moya-HandyJson实现缺失的网络数据层/index.html">
+<meta property="og:title" content="SSH">
+<meta property="og:url" content="http://shayuan.me/2017/10/11/SSH/index.html">
 <meta property="og:site_name" content="AceSha">
-<meta property="og:description" content="准备工作:所用到的库: Moya Alamofire HandyJSON  RxSwift   本文代码很多都是直接手写的，可能会有错误但不妨碍思维逻辑。">
-<meta property="og:updated_time" content="2017-07-21T03:42:04.000Z">
+<meta property="og:description" content="全局SSH默认全局私钥：id_rsa,  公钥id_rsa.pub  检测ssh key 是否存在  1ls -al ~/.ssh  查看SSH 公钥  1cat ~/.ssh/id_rsa.pub  创建SSH, 建议生成密码，也可以忽略  12ssh-keygen -t rsa -C &amp;quot;邮箱&amp;quot;//使用默认操作，一路按下去  拷贝SSH公钥  1pbcopy &amp;lt; ~/.">
+<meta property="og:updated_time" content="2017-10-11T06:00:19.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Moya+HandyJSON实现缺失的网络数据层">
-<meta name="twitter:description" content="准备工作:所用到的库: Moya Alamofire HandyJSON  RxSwift   本文代码很多都是直接手写的，可能会有错误但不妨碍思维逻辑。">
+<meta name="twitter:title" content="SSH">
+<meta name="twitter:description" content="全局SSH默认全局私钥：id_rsa,  公钥id_rsa.pub  检测ssh key 是否存在  1ls -al ~/.ssh  查看SSH 公钥  1cat ~/.ssh/id_rsa.pub  创建SSH, 建议生成密码，也可以忽略  12ssh-keygen -t rsa -C &amp;quot;邮箱&amp;quot;//使用默认操作，一路按下去  拷贝SSH公钥  1pbcopy &amp;lt; ~/.">
 
 
 
@@ -131,13 +130,13 @@
 
 
 
-  <link rel="canonical" href="http://shayuan.me/2017/07/19/Moya-HandyJson实现缺失的网络数据层/"/>
+  <link rel="canonical" href="http://shayuan.me/2017/10/11/SSH/"/>
 
 
 
 
 
-  <title>Moya+HandyJSON实现缺失的网络数据层 | AceSha</title>
+  <title>SSH | AceSha</title>
   
 
 
@@ -285,7 +284,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://shayuan.me/2017/07/19/Moya-HandyJson实现缺失的网络数据层/">
+    <link itemprop="mainEntityOfPage" href="http://shayuan.me/2017/10/11/SSH/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="shayuan">
@@ -302,7 +301,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Moya+HandyJSON实现缺失的网络数据层</h1>
+          <h1 class="post-title" itemprop="name headline">SSH</h1>
         
 
         <div class="post-meta">
@@ -314,8 +313,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-19T17:19:15+08:00">
-                2017-07-19
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-11T11:45:17+08:00">
+                2017-10-11
               </time>
             
 
@@ -324,28 +323,6 @@
             
           </span>
 
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Swift/" itemprop="url" rel="index">
-                    <span itemprop="name">Swift</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
           
 
           
@@ -371,37 +348,47 @@
       
 
       
-        <h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作:"></a>准备工作:</h2><h3 id="所用到的库"><a href="#所用到的库" class="headerlink" title="所用到的库:"></a>所用到的库:</h3><ul>
-<li><a href="https://github.com/Moya/Moya" target="_blank" rel="external">Moya</a></li>
-<li><a href="https://github.com/Alamofire/Alamofire" target="_blank" rel="external">Alamofire</a></li>
-<li><a href="https://github.com/alibaba/HandyJSON" target="_blank" rel="external">HandyJSON</a> </li>
-<li><p><a href="https://github.com/ReactiveX/RxSwift" target="_blank" rel="external">RxSwift</a> </p>
-</li>
-<li><p>本文代码很多都是直接手写的，可能会有错误但不妨碍思维逻辑。</p>
-</li>
-</ul>
-<a id="more"></a>
-<p>一般swift项目的网络请求框架都是<a href="https://github.com/Alamofire/Alamofire" target="_blank" rel="external">Alamofire</a> 。AF的简单使用方式是：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">Alamofire.request(url, parameters: param).responseJSON &#123; (response) in</div><div class="line">      switch response.result &#123;</div><div class="line">      case .success(let value):</div><div class="line">          ....</div><div class="line">      case .failure(let error):</div><div class="line">      </div><div class="line">      &#125;</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
-<p>我们App的网络层架构一般都是有一个基础的<code>BaseNetWork</code>对<code>Alamofire</code>做简单的封装， 且正常情况下的设计模式为单例（不用单例的可以跑起instrument去看看leaks  🙃）。在这个基础的网络请求单例里，我们可以设置通用的<code>Header</code>, <code>Cookies</code>,<code>timeoutIntervalForRequest</code>等等。然后接下来就有选择了：</p>
+        <h2 id="全局SSH"><a href="#全局SSH" class="headerlink" title="全局SSH"></a>全局SSH</h2><p>默认全局私钥：<code>id_rsa</code>,  公钥<code>id_rsa.pub</code></p>
 <ul>
-<li>在<code>BaseNetWork</code>的基础上再根据不同的业务逻辑，创建文件实现不同的网络请求<code>ANetWork</code>、<code>BNetWork</code>等。</li>
-<li>直接在<code>ViewModel</code>或者<code>ViewController</code>里面调用<code>BaseNetWork</code></li>
+<li>检测ssh key 是否存在</li>
 </ul>
-<p>先来看看第二种实现：<br>我们可能在逻辑部分写了这样一个请求：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">let param = []</div><div class="line">param[&quot;token&quot;] = &quot;123&quot;</div><div class="line"></div><div class="line">BaseNetWork.request(.post,</div><div class="line">	urlString: URL.login,</div><div class="line">	parameters: param,</div><div class="line">	responseJSON: &#123; response in</div><div class="line">     switch response.result &#123;</div><div class="line">      case .success(let value):</div><div class="line">          //对数据筛选，处理，转模型等操作</div><div class="line">         if let data = value[&quot;data&quot;] as? [String : Any] &#123;</div><div class="line">         		...</div><div class="line">         		let models = data.toModelArray(Model.self)</div><div class="line">         &#125;</div><div class="line">      case .failure(let error):</div><div class="line">      		//弹出失败HUD等等操作</div><div class="line">      &#125;                  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>然后我们会在需要用到网络数据的地方，写很多类似这样的代码。而实际上这是一个数据层，最理想的方式应该是和逻辑层隔离的，做好解耦，而这种方式就把数据和逻辑糅合在一起了。</p>
-<p>那么我们再思考第一种方式，可能的代码如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">class: ANetWork &#123;</div><div class="line">	</div><div class="line">	class func login(params: [String : Any], success:([Model]) -&gt; ()) &#123;</div><div class="line">	</div><div class="line">		BaseNetWork.request(.post,</div><div class="line">			urlString: URL.login,</div><div class="line">			parameters: param,</div><div class="line">			responseJSON: &#123; response in</div><div class="line">     			switch response.result &#123;</div><div class="line">     			 case .success(let value):</div><div class="line">        		  //对数据筛选，处理，转模型等操作</div><div class="line">        			if let data = value[&quot;data&quot;] as? [String : Any] &#123;</div><div class="line">        				 		</div><div class="line">         				let models = data.toModelArray(Model.self)</div><div class="line">         			</div><div class="line">         				success(models)</div><div class="line">         			&#125;</div><div class="line">        		 &#125;</div><div class="line">      				case .failure(let error):</div><div class="line">	</div><div class="line">     		 &#125;                  </div><div class="line">		&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>这种方法，我们就只需要对外暴露一个<code>params</code>参数接口，余下的请求类型，请求地址，模型转换等操作，我们全在<code>ANetWork</code>类里面完成了。</p>
-<p>我们只需要在使用网络数据的地方做如下调用：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">ANetWork.login(params: params,</div><div class="line">				 success:(&#123; models in</div><div class="line">		//保存token，保存password到keychain等等</div><div class="line">	&#125;)</div></pre></td></tr></table></figure>
-<p>这实际就是最简单的网络数据层，它隔离于逻辑层之外，单独的进行数据采集和处理，回调出处理好的数据，并不做任何逻辑相关的操作。</p>
-<p>而实际上Moya的作用就是作为我们的网络数据层，且提供了很好的AOP操作方法，单元测试方法等。</p>
-<h2 id="Moya的使用"><a href="#Moya的使用" class="headerlink" title="Moya的使用"></a>Moya的使用</h2><ul>
-<li>待续</li>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ls -al ~/.ssh</div></pre></td></tr></table></figure>
+<ul>
+<li>查看SSH 公钥</li>
 </ul>
-<p>插件，Rx更方便AOP</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cat ~/.ssh/id_rsa.pub</div></pre></td></tr></table></figure>
+<ul>
+<li>创建SSH, 建议生成密码，也可以忽略</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ssh-keygen -t rsa -C &quot;邮箱&quot;</div><div class="line">//使用默认操作，一路按下去</div></pre></td></tr></table></figure>
+<ul>
+<li>拷贝SSH公钥</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pbcopy &lt; ~/.ssh/id_rsa.pub</div></pre></td></tr></table></figure>
+<h2 id="多个SSH"><a href="#多个SSH" class="headerlink" title="多个SSH"></a>多个SSH</h2><p> 如果我们Mac上面已经有了ssh-key再创建ssh-key的话，需要给我们的ssh-key文件取不同的名字，默认是id_rsa，如果不重新起名的话，会把原有的给覆盖掉。</p>
+<ul>
+<li><p>新建SSH并命名</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"> //切换到ssh目录</div><div class="line">cd ~/.ssh</div><div class="line">//新建ssh-key</div><div class="line">ssh-keygen -t rsa -C  &quot;邮箱&quot;</div><div class="line"> // 创建新的rsa，需要重新命名</div><div class="line"> //为新建的ssh-key重新命名</div><div class="line"> //暂时使用 id_rsa_github</div><div class="line">Enter file in which to save the key (/Users/shayuan/.ssh/id_rsa): id_rsa_github</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p>添加新ssh-key到ssh agent中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"> //因为默认只读取id_rsa，为了让SSH识别新的私钥，需将其添加到SSH agent中：</div><div class="line">ssh-add ~/.ssh/id_rsa_github</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li>将不同的账号对应的不同的ssh key 和不同的远程服务器关联起来，这个配置是在config下配置的(如果没有config可以自己新建)。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">#thub user(first@email.com)</div><div class="line">Host github1</div><div class="line"> HostName git.some.com/</div><div class="line"> User git</div><div class="line"> IdentityFile /Users/shayuan/.ssh/id_rsa</div><div class="line"></div><div class="line"># second user(second@email.com)</div><div class="line"> # 建一个github别名，新建的帐号使用这个别名做克隆和更新</div><div class="line">Host github2</div><div class="line"> HostName github.com</div><div class="line"> User git</div><div class="line"> IdentityFile /Users/shayuan/.ssh/id_rsa_github</div></pre></td></tr></table></figure>
+<p>其规则就是：从上至下读取config的内容，在每个Host下寻找对应的私钥。这里将GitHub SSH仓库地址中的git@github.com替换成新建的Host别名如：github2，那么原地址是：git@github.com:username/Mywork.git，替换后应该是：github2:username/Mywork.git.</p>
+<ul>
+<li>在Git仓库添加SSH</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pbcopy &lt; ~/.ssh/id_rsa_github.pub</div></pre></td></tr></table></figure>
+<ul>
+<li>验证</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">ssh -T github2</div><div class="line">//或者ping地址</div><div class="line">ssh -T git@gitlab.sensenets.com</div></pre></td></tr></table></figure>
 
       
     </div>
@@ -429,14 +416,6 @@
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/Swift/" rel="tag"># Swift</a>
-          
-            <a href="/tags/架构/" rel="tag"># 架构</a>
-          
-        </div>
-      
 
       
       
@@ -446,8 +425,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/07/14/Mac使用Hexo搭建博客/" rel="next" title="Mac使用Hexo搭建博客">
-                <i class="fa fa-chevron-left"></i> Mac使用Hexo搭建博客
+              <a href="/2017/10/10/Jenkins-Fastlane-SwiftLint/" rel="next" title="Jenkins+Fastlane+SwiftLint">
+                <i class="fa fa-chevron-left"></i> Jenkins+Fastlane+SwiftLint
               </a>
             
           </div>
@@ -456,8 +435,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/07/26/RxSwift学习/" rel="prev" title="RxSwift学习">
-                RxSwift学习 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/11/02/单元测试/" rel="prev" title="单元测试">
+                单元测试 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -599,7 +578,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#准备工作"><span class="nav-number">1.</span> <span class="nav-text">准备工作:</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#所用到的库"><span class="nav-number">1.1.</span> <span class="nav-text">所用到的库:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Moya的使用"><span class="nav-number">2.</span> <span class="nav-text">Moya的使用</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#全局SSH"><span class="nav-number">1.</span> <span class="nav-text">全局SSH</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多个SSH"><span class="nav-number">2.</span> <span class="nav-text">多个SSH</span></a></li></ol></div>
             
 
           </div>
