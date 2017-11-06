@@ -100,12 +100,14 @@
 <meta property="og:url" content="http://shayuan.me/2017/11/02/单元测试/index.html">
 <meta property="og:site_name" content="AceSha">
 <meta property="og:description" content="在说教开始之前，我们先回忆一下我们平时开发时候的场景： 场景1：开发中：  书写一段代码 ⌘ + R 运行 在模拟器上点点点，输入文本 调用想要的函数(or called: 方法)，print 结果 结果与输入不符，修改代码，返回 步骤2  你可能以为不需要第3步，但是要考虑到你的这段函数可能需要依赖很多的变量，so… 场景2：当我们需求变更，中间逻辑改变但是结果没变的时候：  修改逻辑代码 ⌘">
-<meta property="og:image" content="http://shayuan.me/2017/11/02/单元测试/logi.jpg">
-<meta property="og:updated_time" content="2017-11-06T06:51:47.000Z">
+<meta property="og:image" content="http://shayuan.me/2017/11/02/单元测试/login.jpg">
+<meta property="og:image" content="http://shayuan.me/2017/11/02/单元测试/scheme.jpg">
+<meta property="og:image" content="http://shayuan.me/2017/11/02/单元测试/coverage.jpg">
+<meta property="og:updated_time" content="2017-11-06T08:00:13.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="单元测试">
 <meta name="twitter:description" content="在说教开始之前，我们先回忆一下我们平时开发时候的场景： 场景1：开发中：  书写一段代码 ⌘ + R 运行 在模拟器上点点点，输入文本 调用想要的函数(or called: 方法)，print 结果 结果与输入不符，修改代码，返回 步骤2  你可能以为不需要第3步，但是要考虑到你的这段函数可能需要依赖很多的变量，so… 场景2：当我们需求变更，中间逻辑改变但是结果没变的时候：  修改逻辑代码 ⌘">
-<meta name="twitter:image" content="http://shayuan.me/2017/11/02/单元测试/logi.jpg">
+<meta name="twitter:image" content="http://shayuan.me/2017/11/02/单元测试/login.jpg">
 
 
 
@@ -377,7 +379,7 @@
 <p>TDD的妙处即在于，它以需求为引领，通过测试的形式，来指导开发者进行软件的设计与架构，并编写出最为精炼的代码，使得测试用例运行通过。经过适当的重构之后，测试用例与产品代码可达到较为健康的状态。</p>
 <p>当然你也可以把单元测试用作<code>Development</code> then <code>Test</code>。</p>
 <p>还有其他一些概念，将在接下来的例子里面穿插讲解。</p>
-<p>我们用<code>XCode</code>自带的<code>XCTest</code>来试写一个<code>TDD</code>的应用。<br>我们选择最常用的登录界面。<br><img src="/2017/11/02/单元测试/logi.jpg" alt=""></p>
+<p>我们用<code>XCode</code>自带的<code>XCTest</code>来试写一个<code>TDD</code>的应用。<br>我们选择最常用的登录界面。<br><img src="/2017/11/02/单元测试/login.jpg" alt=""></p>
 <p>暂时使用<code>MVC</code>架构，如果你察觉出这个架构对单元测试的影响，等<code>MVC</code>庞大起来有很多代码都无法测试，那我们下面几篇可以来讲讲架构啊。</p>
 <p>我们设想每次限制的逻辑如下：</p>
 <ol>
@@ -399,12 +401,13 @@
 </ol>
 <p>另外，Given-When-Then结构来源于行为驱动测试(Behavior Driven Development，简称BDD)中的易于理解的行业术语。其实，你还可以使用另外一些命名系统，例如Arrange-Act-Assert和Assemble-Activate-Assert，等等。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">//测试Login的Account是否有效。 这个方法名真是不好理解。。。</div><div class="line">    func testLoginAccountValidate() &#123;</div><div class="line">        //given</div><div class="line">        viewController.account.text = &quot;test&quot;</div><div class="line">        //when</div><div class="line">        let validate: Bool = viewController.account.text!.validateAccount()</div><div class="line">        //then</div><div class="line">        XCTAssertTrue(validate, &quot;account不是有效的用户名&quot;)</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
-<p>我们并没有在<code>VC</code>里面刻意的多写代码，我们并不希望以此让你来理解纯<code>MVC</code>架构的不合理之处。当然现在流行的<code>MVVM</code>,<code>MVP</code>,<code>VIPER</code>广义上来说，都没有脱离<code>MVC</code>这个大领域，只是相对而言，解耦处理的更好而已。<br>我们希望<code>String</code>有一个拓展方法<code>validateAccount()</code>来判断它是否是合适的<code>account</code>。当输入的文本符合<code>account</code>的限制时候，这个方法才会返回<code>true</code>。<br>以<code>XCTAssert</code>开头的是<code>XCTest</code>的一些断言方法，方法本身不难理解，我们将在<code>Demo</code>里面做一些注释。</p>
+<p>我们并没有在<code>VC</code>里面刻意的多写代码，我们并不希望以此让你来理解<code>MVC</code>架构的不合理之处。当然现在流行的<code>MVVM</code>,<code>MVP</code>,<code>VIPER</code>广义上来说，都没有脱离<code>MVC</code>这个大领域，只是相对而言，解耦处理的更好而已。</p>
+<p>我们希望<code>String</code>有一个拓展方法<code>validateAccount()</code>来判断它是否是合适的<code>account</code>。当输入的文本符合<code>account</code>的限制时候，这个方法才会返回<code>true</code>。<br>以<code>XCTAssert</code>开头的是<code>XCTest</code>的一些断言方法，方法本身不难理解，我们将在<code>Demo</code>里面做一些注释。</p>
 <p>我们新建一个<code>String+Ext.swift</code>的文件，输入以下代码：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">extension String &#123;</div><div class="line">    func validateAccount() -&gt; Bool &#123;</div><div class="line">        if self.count &lt; 8 &#123; return false &#125;</div><div class="line"></div><div class="line">        let pattern = &quot;^([a-z0-9_\\.-]+)@([\\da-z\\.-]+)\\.([a-z\\.]&#123;2,6&#125;)$&quot;</div><div class="line">        let regex = try! NSRegularExpression(pattern: pattern,</div><div class="line">                                        options: .caseInsensitive)</div><div class="line"></div><div class="line">        let matches = regex.matches(in: self,</div><div class="line">                                    options: [],</div><div class="line">                                    range: NSMakeRange(0, self.utf16.count))</div><div class="line">        return matches.count &gt; 0</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>这是一个对字符个数和邮箱判断的正则。<br>在此测试方法中，我们假定输入的文本是<code>test</code>, 当然按照我们的限制，断言是不能通过的，如果你<code>⌘ + U</code>测试的话，会得到一个<code>❌</code>。而<code>TDD</code>的正确流程你可以理解为<code>❌</code> -&gt; <code>✅</code> -&gt; <code>重构方法</code>。 当然在你对整个应用进行重构或需求变更的时候，<code>重构方法</code>这步务必省略。<br>我们接下来补齐缺失的方法。</p>
 <p>我们修改<code>test</code>的<code>given</code>阶段代码为：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">viewController.account.text = &quot;q@q.com&quot;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">viewController.account.text = &quot;qq@qq.com&quot;</div></pre></td></tr></table></figure>
 <p>我们再<code>⌘ + U</code>，bingo，得到一个<code>✅</code>。</p>
 <p>试想一下我们的业务代码或者测试代码有没有需要修改的地方？在我们开发阶段，写完<code>String+Ext.swift</code>的代码后，我们并不能确定正则或是我们的方法有效，而且我们并不是每次都需要对<code>viewController.account.text</code>进行赋值后才可以测试。所以我们应该先修改测试代码，先测试<code>数据</code>部分，在此处细分是<code>数据处理</code>，这可能是你需要遵循的一个准则。</p>
 <p>我们修改一下测试代码，<code>⌘ + N</code>新建一个测试类<code>Unit Test Case Class</code>类继承自<code>XCTestCase</code>，并命名为<code>ValidateTests</code>，代码如下：</p>
@@ -426,21 +429,37 @@
 <p>那我们接下来先在<code>LoginTests</code>书写测试代码：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">func testLoginAction() &#123;</div><div class="line"></div><div class="line">    //given</div><div class="line">    viewController.account.text = &quot;q.com&quot;</div><div class="line">    viewController.password.text = &quot;1234567&quot;</div><div class="line"></div><div class="line">    XCTAssertFalse(viewController.loginButton.isEnabled, &quot;account不是有效的用户名&quot;)</div><div class="line">    viewController.account.text = &quot;me@qq.com&quot;</div><div class="line">    viewController.password.text = &quot;123456&quot;</div><div class="line">    XCTAssertFalse(viewController.loginButton.isEnabled, &quot;password密码长度不足&quot;)</div><div class="line"></div><div class="line">    viewController.password.text = &quot;123456888&quot;</div><div class="line">    XCTAssertFalse(viewController.login(), &quot;password密码错误&quot;)</div><div class="line"></div><div class="line">    viewController.password.text = &quot;1234567&quot;</div><div class="line">    XCTAssertTrue(viewController.login())</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>并且，我们需要在<code>setUp</code>方法最后，加入这段代码<code>viewController.loginButton.isEnabled = false</code>。让一些依赖在最开始的时候是正确的状态。</p>
-<p>我们需要补足<code>ViewController</code>里面的代码，在原有代码的技术上，加入以下代码即可，然后我们<code>⌘ + U</code> 测试一下，又是成功的。</p>
+<p>我们需要补足<code>ViewController</code>里面的代码，在原有代码的基础上，加入以下代码即可，然后我们<code>⌘ + U</code> 测试一下，又是成功的。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">var isLoginEnable = false</div><div class="line"></div><div class="line">override func viewDidLoad() &#123;</div><div class="line">    super.viewDidLoad()</div><div class="line">    account.addTarget(self, action: #selector(textDidChanged(tf:)), for: .editingChanged)</div><div class="line">    password.addTarget(self, action: #selector(textDidChanged(tf:)), for: .editingChanged)</div><div class="line">&#125;</div><div class="line"></div><div class="line">@objc func textDidChanged(tf: UITextField) &#123;</div><div class="line">    isLoginEnable = account.text!.validateAccount() &amp;&amp; password.text!.validatePassword()</div><div class="line">    loginButton.isEnabled = isLoginEnable</div><div class="line">&#125;</div><div class="line"></div><div class="line">@IBAction func LoginAction(_ sender: Any) &#123;</div><div class="line">    let success = login()</div><div class="line">    alert(success: success)</div><div class="line">&#125;</div><div class="line"></div><div class="line">func login() -&gt; Bool &#123;</div><div class="line">    return password.text == &quot;1234567&quot; &amp;&amp; account.text == &quot;me@qq.com&quot;</div><div class="line">&#125;</div><div class="line"></div><div class="line">func alert(success: Bool) &#123;</div><div class="line">    let message = success ? &quot;success&quot; : &quot;fail&quot;</div><div class="line">    let alertVC = UIAlertController(title: &quot;Note&quot;, message: message, preferredStyle: .alert)</div><div class="line">    alertVC.addAction(UIAlertAction(title: &quot;OK&quot;, style: .cancel, handler: nil))</div><div class="line"></div><div class="line">    present(alertVC, animated: true, completion: nil)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>OK，到此我们算是完成了登录界面的简单逻辑判断，省去了我们很多<code>run</code> -&gt; <code>interface</code> -&gt; <code>test</code> 的浪费生命的操作，而且足够高逼格不是？</p>
-<p>这篇文章没有特别强的技术点，只是一种开发上的逻辑改变。我们希望你的代码足够<code>Strong</code>，可以应对很多不确定的状况；架构优秀，方便阅读和扩展。</p>
+<p>OK，到此我们算是完成了登录界面的简单逻辑判断，省去了我们很多<code>run</code> -&gt; <code>interface</code> -&gt; <code>test</code> 的浪费生命的操作，而且足够高逼格不是？手动试一下也没问题。</p>
+<p>接下来正规的登录，都是要进行联网操作的，而且联网都是异步操作，那么异步操作如何测试呢？我们希望上例中的<code>loginAction(_:)</code>会调用一个异步方法，那么我们可以直接书写一个假的<code>Network</code>, 并写入如下代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">class Network &#123;</div><div class="line">    static func fakeLogin(forceSuccess: Bool, closure: @escaping (Bool) -&gt; ()) &#123;</div><div class="line">        DispatchQueue.global().asyncAfter(deadline: .now() + 1.0) &#123;</div><div class="line">            closure(forceSuccess)</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在此选择的是类方法。但是常规情况下，这可能会是一个实例方法，<code>viewController</code>需要保存一个<code>Network</code>的属性用来<code>cancel</code>当前的请求。在那种情况下，我们的架构，设计方法，测试的类都需要升级一下才能更好的满足需求。</p>
+<p>我们新建一个简单的测试类<code>NetworkTests</code>, 代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">func testNetworkAsnycResult() &#123;</div><div class="line">    //given</div><div class="line">    let success = true</div><div class="line">    let promise = expectation(description: &quot;network success&quot;)</div><div class="line">    //when</div><div class="line">    Network.fakeLogin(forceSuccess: success) &#123; result in</div><div class="line"></div><div class="line">        promise.fulfill()</div><div class="line">        XCTAssertTrue(success, &quot;network failed&quot;)</div><div class="line">    &#125;</div><div class="line">    //then</div><div class="line">    waitForExpectations(timeout: 5, handler: nil)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这个方法检查<code>fakeLogin</code>返回状态是否是<code>True</code>。大部分代码和你在 App 中的写法一样，除了这几行：</p>
+<ol>
+<li>expectation(_:) 返回一个 XCTestExpectation 对象，这个对象保存了一个承诺（promise)，又称作期望(expectation)或未来(future)。参数 description 用于描述你预期的行为。</li>
+<li>为了和描述一致，你可以在异步方法的成功回调块中调用 promise.fullfill()。</li>
+<li>waitForExpections(:_handler:) 保持测试方法的运行，直到所有的 expectation 被 fullfill 或者到达指定超时时间，这两个条件任何一个都行。</li>
+</ol>
+<p>运行测试，bingo，又是正确的。</p>
+<p>当然在实际生产过程中，正确的回调总归能请求来，而错误的状态码却会迟迟得不到。这个时候我们可以<code>stub</code>一些数据来跑测试用例，以验证我们代码是否覆盖了所有可预测的错误。而在有些情况，我们可能需要<code>Mock</code>一个对象来测试代码。有关<code>Stub</code>和<code>Mock</code>，我们也放在下一篇文章来讲解。</p>
+<p>我们修改一下<code>ViewController</code>的代码，并把所有逻辑部分移到一个<code>Extension</code>里面。至于<code>@IBAction</code>，就放那吧。。。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">@IBAction func LoginAction(_ sender: Any) &#123;</div><div class="line">    let success = login()</div><div class="line">    Network.fakeLogin(forceSuccess: success) &#123; flag in</div><div class="line">        DispatchQueue.main.async &#123;</div><div class="line">            self.alert(success: success)</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="代码覆盖"><a href="#代码覆盖" class="headerlink" title="代码覆盖"></a>代码覆盖</h3><p>代码覆盖工具会报告 App 代码有多少经过了测试，你也可以知道那一部分代码还没有经过测试。</p>
+<p>要打开代码覆盖，编辑 scheme 中的 Test，然后勾选 Code Coverage 选项<br><img src="/2017/11/02/单元测试/scheme.jpg" alt=""><br>运行全部测试（command+U)，打开报告导航器（command+8)。选择 <code>By Time</code>，选择列表中第一个，然后选择 Coverage 栏：<br><img src="/2017/11/02/单元测试/coverage.jpg" alt=""></p>
+<p>我们发现，还是有些方法很难测试的，不过也不用过于追求100%的代码覆盖率。当然，引用一句话：<code>当你不知道在哪写单元测试的时候，那你的代码就烂透了</code> 🙂</p>
+<p>那么怎样的架构适合单元测试呢？</p>
+<ol>
+<li>类之间要松耦合</li>
+<li>被测试的函数需要产生可测量的结果， 建议 <code>函数式编程</code></li>
+<li>被测试的函数要遵循单一职责</li>
+<li>展示和业务逻辑要分开</li>
+<li>记得重构，不断提高代码的可测性</li>
+</ol>
+<p>这篇文章没有特别强的技术点，只是一种开发上的逻辑改变。我们希望你的代码足够<code>Strong</code>，可以应对很多不确定的状况；架构优秀，方便阅读和扩展，方便单元测试的进行。</p>
 <p>接下来的文章预告，会引入一个<code>BDD</code>的测试框架<code>Quick</code> + <code>Nimble</code>，会探讨一下架构相关，会写一下现在流行的<code>RxSwift</code>的单元测试的方法。</p>
-<p>六、代码的可测性 — 怎样的架构适合单元测试</p>
-<p>当你不知道在哪写单元测试的时候，那你的代码就烂透了。</p>
-<p>类之间要松耦合<br>被测试的函数需要产生可测量的结果， 建议 函数式编程<br>被测试的函数要遵循单一职责<br>展示和业务逻辑要分开<br>记得重构，不断提高代码的可测性</p>
-<p>七、最佳实践</p>
-<p>每个功能类都应提供单元测试，且每一个测试类，只依赖于其要测试的受测类。使用伪造对象避免对其他类的依赖，保证一个测试类只关注一个被测类，当测试不通过时，就能迅速的定位到是谁发生了错误，而不会受到其他类的干扰；使用伪造环境避免其他环境的干扰，保证case在任何环境下都能输出同样的测试结果</p>
-<p>一个单测方法只测试一个功能点，并且不依赖其他测试用例的结果作为输入，保证case的原子性。if-else这种分支的情况最好分成两个case来测试</p>
-<p>单元测试通过数据的变化来做输出结果的验证</p>
-<p>（.h, public 的方法，内部internal 的方法）<br>应对所有暴露的属性和方法提供测试（包含回调方法），私有方法则不必。因为对外接口应该会调用到所有的私有方法，而且私有方法相对公有方法来说发生变动的可能性大很多，会造成不必要的修改测试代码的成本。如果非要测试私有方法，可以通过KVC、子类化和类别来实现</p>
-<p>第三方的框架有很多，OCUnit、GHUnit、Expecta、OCMock，目前我使用的OCUnit + Expecta</p>
-<p>其次，取决于项目的复杂度和依赖性，对于一个业务模型及其复杂、内部模块之间的相互依赖性非常强的项目，采用TDD反而会得不尝失，这会导致程序员在拆分接口和写测试代码的时候工作量非常大。另外，由于模块之间的依赖性太强，我们在写测试代码的时候可能不采取一些桥接模式来实现，这样势必加大了程序员的工作量。</p>
 
       
     </div>
@@ -539,8 +558,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/uploads/avatar.jpg"
@@ -613,6 +641,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#代码覆盖"><span class="nav-number">1.</span> <span class="nav-text">代码覆盖</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
