@@ -353,7 +353,7 @@
       
         
           
-            <p>在<code>说教</code>开始之前，我们先回忆一下我们平时开发时候的场景：</p>
+            <h3 id="普通开发"><a href="#普通开发" class="headerlink" title="普通开发"></a>普通开发</h3><p>在<code>说教</code>开始之前，我们先回忆一下我们平时开发时候的场景：</p>
 <p>场景1：开发中：</p>
 <ol>
 <li>书写一段代码</li>
@@ -369,16 +369,15 @@
 <li>⌘ + R</li>
 <li>重复<code>场景1</code> 的 <code>3 -&gt; 5</code></li>
 </ol>
-<p>场景3: QA发现了一些bug，调试半天发现是一段需求变更修改代码导致的低级错误。<code>🙂 keep cool man.</code></p>
-<p>场景…</p>
+<p>场景3: QA发现了一些bug，调试半天发现是一段需求变更修改代码导致的低级错误。<code>🙂 keep cool man.</code><br>场景… </p>
 <p>如果你和我一样选择的语言是<code>Swift</code>且没有做编译优化的话: 🙂</p>
 <p>好了我这么啰嗦和你这样调试代码<code>无疑是对美好生命和绚丽青春的巨大浪费</code>，所以我们还是直接进入<code>说教</code>环节吧。</p>
 <p><code>Apple</code>自<code>Xcode 5</code>引入<code>XCTest</code>， 在这里我们引入一个<code>测试驱动开发(Test Driven Development，以下简称TDD)</code>的概念：</p>
-<p>TDD:<br>    TDD是一种相对于普通思维的方式来说，比较极端的一种做法。我们一般能想到的是先编写业务代码，然后为其编写测试代码，用来验证产品方法是不是按照设计工作。而TDD的思想正好与之相反，在TDD的世界中，我们应该首先根据需求或者接口情况编写测试，然后再根据测试来编写业务代码。</p>
-<p>这就相当于先给定一个准则或者是具体目标，你的行为必须要达到这个目标才算及格。<br>拓展到代码层次就是先给一个结果，你的代码要 <code>==</code> 这个结果才算合格的代码。<br>不难理解。</p>
-<p>TDD的妙处即在于，它以需求为引领，通过测试的形式，来指导开发者进行软件的设计与架构，并编写出最为精炼的代码，使得测试用例运行通过。经过适当的重构之后，测试用例与产品代码可达到较为健康的状态。</p>
-<p>当然你也可以把单元测试用作<code>Development</code> then <code>Test</code>。</p>
-<p>还有其他一些概念，将在接下来的例子里面穿插讲解。</p>
+<h3 id="TDD"><a href="#TDD" class="headerlink" title="TDD"></a>TDD</h3><p>TDD是一种相对于普通思维的方式来说，比较极端的一种做法。我们一般能想到的是先编写业务代码，然后为其编写测试代码，用来验证产品方法是不是按照设计工作。而TDD的思想正好与之相反，在TDD的世界中，我们应该首先根据需求或者接口情况编写测试，然后再根据测试来编写业务代码。</p>
+<pre><code>这就相当于先给定一个准则或者是具体目标，你的行为必须要达到这个目标才算及格。
+拓展到代码层次就是先给一个结果，你的代码要 `==` 这个结果才算合格的代码。
+不难理解。
+</code></pre><p>TDD的妙处即在于，它以需求为引领，通过测试的形式，来指导开发者进行软件的设计与架构，并编写出最为精炼的代码，使得测试用例运行通过。经过适当的重构之后，测试用例与产品代码可达到较为健康的状态。<br>当然你也可以把单元测试用作<code>Development</code> then <code>Test</code>。<br>还有其他一些概念，将在接下来的例子里面穿插讲解。</p>
 <p>我们用<code>XCode</code>自带的<code>XCTest</code>来试写一个<code>TDD</code>的应用。<br>我们选择最常用的登录界面。<br><img src="/2017/11/02/单元测试/login.jpg" alt=""></p>
 <p>暂时使用<code>MVC</code>架构，如果你察觉出这个架构对单元测试的影响，等<code>MVC</code>庞大起来有很多代码都无法测试，那我们下面几篇可以来讲讲架构啊。</p>
 <p>我们设想每次限制的逻辑如下：</p>
@@ -387,7 +386,7 @@
 <li><code>password</code>输入纯数字，且长度 &gt;= 6</li>
 <li><code>account</code>、<code>password</code> 都符合条件时<code>Login</code>按钮才可点击</li>
 <li><code>password</code>正确时登录，不正确弹窗提示</li>
-<li>Todo: 登录后界面</li>
+<li>Todo: 登录后界面，设计UI测试。</li>
 </ol>
 <p>那么接下来，我们按照<code>TDD</code>的思想，应该先写业务代码，还是测试代码呢？</p>
 <p>不清楚的回去重读<code>TDD</code>的定义！</p>
@@ -432,7 +431,7 @@
 <p>我们需要补足<code>ViewController</code>里面的代码，在原有代码的基础上，加入以下代码即可，然后我们<code>⌘ + U</code> 测试一下，又是成功的。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">var isLoginEnable = false</div><div class="line"></div><div class="line">override func viewDidLoad() &#123;</div><div class="line">    super.viewDidLoad()</div><div class="line">    account.addTarget(self, action: #selector(textDidChanged(tf:)), for: .editingChanged)</div><div class="line">    password.addTarget(self, action: #selector(textDidChanged(tf:)), for: .editingChanged)</div><div class="line">&#125;</div><div class="line"></div><div class="line">@objc func textDidChanged(tf: UITextField) &#123;</div><div class="line">    isLoginEnable = account.text!.validateAccount() &amp;&amp; password.text!.validatePassword()</div><div class="line">    loginButton.isEnabled = isLoginEnable</div><div class="line">&#125;</div><div class="line"></div><div class="line">@IBAction func LoginAction(_ sender: Any) &#123;</div><div class="line">    let success = login()</div><div class="line">    alert(success: success)</div><div class="line">&#125;</div><div class="line"></div><div class="line">func login() -&gt; Bool &#123;</div><div class="line">    return password.text == &quot;1234567&quot; &amp;&amp; account.text == &quot;me@qq.com&quot;</div><div class="line">&#125;</div><div class="line"></div><div class="line">func alert(success: Bool) &#123;</div><div class="line">    let message = success ? &quot;success&quot; : &quot;fail&quot;</div><div class="line">    let alertVC = UIAlertController(title: &quot;Note&quot;, message: message, preferredStyle: .alert)</div><div class="line">    alertVC.addAction(UIAlertAction(title: &quot;OK&quot;, style: .cancel, handler: nil))</div><div class="line"></div><div class="line">    present(alertVC, animated: true, completion: nil)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>OK，到此我们算是完成了登录界面的简单逻辑判断，省去了我们很多<code>run</code> -&gt; <code>interface</code> -&gt; <code>test</code> 的浪费生命的操作，而且足够高逼格不是？手动试一下也没问题。</p>
-<p>接下来正规的登录，都是要进行联网操作的，而且联网都是异步操作，那么异步操作如何测试呢？我们希望上例中的<code>loginAction(_:)</code>会调用一个异步方法，那么我们可以直接书写一个假的<code>Network</code>, 并写入如下代码：</p>
+<h3 id="异步测试"><a href="#异步测试" class="headerlink" title="异步测试"></a>异步测试</h3><p>接下来正规的登录，都是要进行联网操作的，而且联网都是异步操作，那么异步操作如何测试呢？我们希望上例中的<code>loginAction(_:)</code>会调用一个异步方法，那么我们可以直接书写一个假的<code>Network</code>, 并写入如下代码：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">class Network &#123;</div><div class="line">    static func fakeLogin(forceSuccess: Bool, closure: @escaping (Bool) -&gt; ()) &#123;</div><div class="line">        DispatchQueue.global().asyncAfter(deadline: .now() + 1.0) &#123;</div><div class="line">            closure(forceSuccess)</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>在此选择的是类方法。但是常规情况下，这可能会是一个实例方法，<code>viewController</code>需要保存一个<code>Network</code>的属性用来<code>cancel</code>当前的请求。在那种情况下，我们的架构，设计方法，测试的类都需要升级一下才能更好的满足需求。</p>
 <p>我们新建一个简单的测试类<code>NetworkTests</code>, 代码如下：</p>
