@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="文章写作背景介绍：最近准备写一个相册框架，在架构之初希望能达到下面几个要求：  Dry，不臃肿、耦合不严重的架构 不希望引入第三方框架 组件间需要通信，比如图片change了需要reload 一些状态组件间共享，并且组件也可能会更改这个状态，比如Config 一个组件的状态需要共享，比如已经实现获取照片后的回调  思来想去貌似简单的架构都不能同时满足这些要求，想到自己在使用RxSwift系列框架的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS类Redux架构的简单实现及其利弊">
+<meta property="og:url" content="http://shayuan.me/2017/11/21/iOS类Redux架构的简单实现及其利弊/index.html">
+<meta property="og:site_name" content="AceSha">
+<meta property="og:description" content="文章写作背景介绍：最近准备写一个相册框架，在架构之初希望能达到下面几个要求：  Dry，不臃肿、耦合不严重的架构 不希望引入第三方框架 组件间需要通信，比如图片change了需要reload 一些状态组件间共享，并且组件也可能会更改这个状态，比如Config 一个组件的状态需要共享，比如已经实现获取照片后的回调  思来想去貌似简单的架构都不能同时满足这些要求，想到自己在使用RxSwift系列框架的">
+<meta property="og:image" content="http://shayuan.me/2017/11/21/iOS类Redux架构的简单实现及其利弊/reduxflow.jpg">
+<meta property="og:updated_time" content="2017-11-21T06:50:09.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS类Redux架构的简单实现及其利弊">
+<meta name="twitter:description" content="文章写作背景介绍：最近准备写一个相册框架，在架构之初希望能达到下面几个要求：  Dry，不臃肿、耦合不严重的架构 不希望引入第三方框架 组件间需要通信，比如图片change了需要reload 一些状态组件间共享，并且组件也可能会更改这个状态，比如Config 一个组件的状态需要共享，比如已经实现获取照片后的回调  思来想去貌似简单的架构都不能同时满足这些要求，想到自己在使用RxSwift系列框架的">
+<meta name="twitter:image" content="http://shayuan.me/2017/11/21/iOS类Redux架构的简单实现及其利弊/reduxflow.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"right","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://shayuan.me/2017/11/21/iOS类Redux架构的简单实现及其利弊/"/>
+
+
+
+
+
+  <title>iOS类Redux架构的简单实现及其利弊 | AceSha</title>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//tajs.qq.com/stats?sId=63056094";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">AceSha</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">swifter</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://shayuan.me/2017/11/21/iOS类Redux架构的简单实现及其利弊/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="shayuan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AceSha">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">iOS类Redux架构的简单实现及其利弊</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-21T14:48:20+08:00">
+                2017-11-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="文章写作背景介绍："><a href="#文章写作背景介绍：" class="headerlink" title="文章写作背景介绍："></a>文章写作背景介绍：</h2><p>最近准备写一个相册框架，在架构之初希望能达到下面几个要求：</p>
+<ol>
+<li><code>Dry</code>，不臃肿、耦合不严重的架构</li>
+<li>不希望引入第三方框架</li>
+<li>组件间需要通信，比如图片<code>change</code>了需要<code>reload</code></li>
+<li>一些状态组件间共享，并且组件也可能会更改这个状态，比如<code>Config</code></li>
+<li>一个组件的状态需要共享，比如已经实现获取照片后的回调</li>
+</ol>
+<p>思来想去貌似简单的架构都不能同时满足这些要求，想到自己在使用<code>RxSwift</code>系列框架的时候，喜欢使用<code>ReactorKit</code>这个<code>单向数据流状态机</code>的库，另外在<code>非Rx</code>系列的架构中，也有一个<code>ReSwift</code>的<code>单向数据流</code>的库，所以就想尝试着借鉴2者的实现方式，自己实现一个简单的<code>单向数据流</code>的类<code>Redux</code>架构。</p>
+<h2 id="Redux设计思想和概念"><a href="#Redux设计思想和概念" class="headerlink" title="Redux设计思想和概念:"></a><code>Redux</code>设计思想和概念:</h2><h4 id="设计思想："><a href="#设计思想：" class="headerlink" title="设计思想："></a>设计思想：</h4><p><code>Redux</code>的设计思想就是一个<code>App</code>对应一个<code>State</code>，当<code>State</code>改变时候，<code>App</code>做相对应的改变。</p>
+<p>记住这句话，我们再来看一下基本概念：</p>
+<h4 id="基本概念："><a href="#基本概念：" class="headerlink" title="基本概念："></a>基本概念：</h4><ul>
+<li>State: 整个<code>App</code>的状态, 数据层</li>
+<li>Action: 任何需要更新<code>State</code>的操作</li>
+<li>Store: 接受<code>Action</code>并更新<code>State</code>，持有数据，接受订阅</li>
+</ul>
+<p>这是最基本的 3个概念，在<code>Store</code>层，还有 2个数据接受和处理的概念：</p>
+<ul>
+<li>subscribe: 当前类订阅后既可接收<code>Store</code>的<code>State</code>状态更新通知</li>
+<li>reducer: <code>Action</code>转换成<code>State</code>的纯函数方法</li>
+</ul>
+<h2 id="实现思路："><a href="#实现思路：" class="headerlink" title="实现思路："></a>实现思路：</h2><p>整体架构如下图：</p>
+<p><img src="/2017/11/21/iOS类Redux架构的简单实现及其利弊/reduxflow.jpg" alt=""></p>
+<ul>
+<li>首先定义 3个主要协议</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">public protocol ActionType &#123;&#125;</div><div class="line">public protocol StateType &#123;&#125;</div><div class="line"></div><div class="line">public protocol StoreType &#123;</div><div class="line">    func dispatch(_ action: ActionType)</div><div class="line"></div><div class="line">    func subscribe&lt;S: StoreSubscriber&gt;(_ subscriber: S)</div><div class="line"></div><div class="line">    func unsubscribe&lt;S: StoreSubscriber&gt;(_ subscriber: S)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>定义订阅后<code>View</code>层(不限于)更新的协议，用于每次产生一个<code>State</code>的回调</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">public protocol StoreSubscriber: AnyStoreSubscriber &#123;</div><div class="line">    associatedtype StoreSubscriberStateType</div><div class="line"></div><div class="line">    func newState(state: StoreSubscriberStateType)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>实现主要的<code>Store</code>：<br><code>Store</code>类，需要定义<code>State</code>，需要持有订阅的<code>View</code>层，纯函数<code>Reducer</code> 3个属性和实现一个<code>dispatch</code>方法，用来接收<code>Action</code>，并在持有的<code>Reducer</code>纯函数里转化为<code>State</code>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">private var reducer: Reducer&lt;State&gt;</div><div class="line">private var subscribers: [SubscriptionType] = []</div><div class="line">public var state: State</div><div class="line"></div><div class="line">// 接受一个action，并转换成state</div><div class="line">func dispatch(_ action: ActionType)&#123;</div><div class="line">    guard !isDispatching else &#123;</div><div class="line">        fatalError(&quot;dead circle&quot;)</div><div class="line">    &#125;</div><div class="line">    isDispatching = true</div><div class="line">    let newState = reducer(action, state)</div><div class="line">    subscribers.forEach&#123; $0.subscriber?._newState(state: newState) &#125;</div><div class="line">    isDispatching = false</div><div class="line">    state = newState</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 订阅才可以接受dispatch转换的state</div><div class="line">func subscribe&lt;S: StoreSubscriber&gt;(_ subscriber: S) &#123;</div><div class="line">    let box = SubscriptionBox&lt;StateType&gt;(subscriber: subscriber)</div><div class="line">    unsubscribe(subscriber)</div><div class="line">    subscribers.append(box)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="简单实现"><a href="#简单实现" class="headerlink" title="简单实现"></a>简单实现</h2><p>主要结构完成，接下来看看如何使用</p>
+<p>首先定义<code>State</code>, <code>StateInitial</code>只是一个可以忽略的初始化协议。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">public struct AppState: StateType, StateInitial &#123;</div><div class="line"></div><div class="line">    var isLoading: Bool</div><div class="line">    var selectedAssets: [PHAsset] = []</div><div class="line">    </div><div class="line">    var listViewState: ListViewState</div><div class="line">    var gridViewState: GridViewState</div><div class="line">    </div><div class="line">    ······</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>我们把不同页面也单独声明成<code>State</code>保存在<code>AppState</code>里。</p>
+<p>定义需要使用的<code>Action</code>，因为只需要遵循一个<code>ActionType</code>的协议，所以我们有多种定义方式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">enum AppAction: ActionType &#123;</div><div class="line">    case startLoading</div><div class="line">    case endLoading</div><div class="line">    case photoChange(PHChange)</div><div class="line">&#125;</div><div class="line"></div><div class="line">struct StartLoading: ActionType &#123;&#125;</div><div class="line">struct EndLoading: ActionType &#123;&#125;</div></pre></td></tr></table></figure>
+<p>实现最主要的<code>Reducer</code>，我们在此处对<code>Reducer</code>进行了拆分，与<code>AppState</code>的拆分思想一致, 在其他的<code>Reducer</code>里面，将<code>action</code>转换成对应的<code>State</code>即可。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">func MainReducer(action: ActionType, state: State?) -&gt; State &#123;</div><div class="line">    return State(isLoading: loadingReducer(action: action, state: state?.isLoading),</div><div class="line">                 selectedAssets: selectedAssetsReducer(action: action, state: state?.selectedAssets),</div><div class="line">                 listViewState: listDataReducer(action: action, state: state?.listViewState),</div><div class="line">                 gridViewState: gridDataReducer(action: action, state: state?.gridViewState)</div><div class="line">                )</div><div class="line">        </div><div class="line">&#125;</div><div class="line"></div><div class="line">// 其他Reducer</div><div class="line">func loadingReducer(action: ActionType, state: Bool?) -&gt; Bool &#123;</div><div class="line">    var state = state ?? false</div><div class="line"></div><div class="line">    switch action &#123;</div><div class="line">    case _ as StartLoading:</div><div class="line">        state = true</div><div class="line">    case _ as EndLoading:</div><div class="line">        state = false</div><div class="line">    default:</div><div class="line">        break</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return state</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">······</div></pre></td></tr></table></figure>
+<h2 id="如何使用："><a href="#如何使用：" class="headerlink" title="如何使用："></a>如何使用：</h2><p>实现了最主要的<code>Action</code> -&gt; <code>Store</code>(<code>Reducer</code>) -&gt; <code>State</code>后，使用起来也非常简单，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">···</div><div class="line">  override public func viewDidLoad() &#123;</div><div class="line">        super.viewDidLoad()</div><div class="line">        configureUI()</div><div class="line">        // 订阅Store</div><div class="line">        Store.subscribe(self)</div><div class="line">        // 发送一个Action，在下面的协议方法里获取更新的State</div><div class="line">        Store.dispatch(FetchDataAction.fetchListData())</div><div class="line">    &#125;</div><div class="line">···  </div><div class="line">    </div><div class="line">// MARK: - StoreSubscriber</div><div class="line">extension ListViewController: StoreSubscriber &#123;</div><div class="line">    public func newState(state: State) &#123;</div><div class="line">        if state.listViewState.fetchResults.count &gt; 0 </div><div class="line">        &amp;&amp; state.listViewState.fetchResults != results &#123;</div><div class="line">            results = state.listViewState.fetchResults</div><div class="line">			  // 获取结果后更新</div><div class="line">            tableView.reloadData()</div><div class="line">        &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="利与弊的思考"><a href="#利与弊的思考" class="headerlink" title="利与弊的思考"></a>利与弊的思考</h2><p>类似<code>Redux</code>的架构，可以很好把<code>数据层</code>和<code>UI层</code>分离开来，并且可以更全面的覆盖单元测试。而且可以更好的把所有<code>View</code>层状态改变的逻辑代码规整到一起，<code>View</code>层调用<code>Action</code>都必须使用<code>dispatch</code>方法，方便索引。在我的小框架里，我可以在子组件里，不通过代理就更新父组件的状态；也可以在任何子组件，不需要过多耦合的调用父组件的数据或者一些全局状态。</p>
+<p>然而利与弊都是相辅相成的，在使用过程中也发现了以下一些弊端：</p>
+<ol>
+<li>任何<code>Action</code>都会让所有的<code>Subscriber</code>都调用<code>newState(state: State)</code>函数，所以如果是<code>dataSource</code>这种类型的属性，就必须有一个<code>previous State</code>来进行对比，不然可能无时无刻不在<code>reload</code>。</li>
+<li>有时候我只想<code>reload</code>部分<code>[indexPath]</code>，就算我有<code>previous State</code>，但我还是要赋值给<code>State.dataSource</code>，还是会整个<code>reload</code>，解决的思路无外乎给<code>State</code>多一个属性，在和<code>previous State</code>先判断这个属性是否和之前相同。</li>
+<li>可能还有，我还没发现。。。</li>
+</ol>
+<h2 id="改进"><a href="#改进" class="headerlink" title="改进"></a>改进</h2><p>在<code>Store</code>类里面，多保存一个<code>previousState</code>的<code>StateType</code>属性，在订阅的协议里，调用<code>newState(state: State, previousState: State?)</code>这样的函数。这个时候真的是深深怀念<code>RxSwift</code>的<code>distinctUntilChanged</code>。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在<code>Redux</code>的概念里，或者更古老的<code>Flux</code>，整个<code>App</code>对应一个<code>State</code>，<code>ReSwift</code>也是这样的思路。在这种方式下，任何<code>Action</code>的<code>dispatch</code>都会调用任何遵循订阅协议的订阅者来响应状态的改变，这种方式都会带来不必要的性能损耗（在此想吐槽一下现在的Bilibili iOS客户端，是不是重构了，现在性能特差，耗电好猛）。其实我们完全可以单个组件<code>A</code>使用一个<code>AStore</code>来存储响应这个组件的<code>AState</code>，把回调方法修改为：<code>newState(state: State, previousState: State?, appState: AppState)</code>之类的就可以解决。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/11/02/单元测试/" rel="next" title="单元测试">
+                <i class="fa fa-chevron-left"></i> 单元测试
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.jpg"
+               alt="shayuan" />
+          <p class="site-author-name" itemprop="name">shayuan</p>
+           
+              <p class="site-description motion-element" itemprop="description">技术/随笔.etc.</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/AceSha" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#文章写作背景介绍："><span class="nav-number">1.</span> <span class="nav-text">文章写作背景介绍：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redux设计思想和概念"><span class="nav-number">2.</span> <span class="nav-text">Redux设计思想和概念:</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#设计思想："><span class="nav-number">2.0.1.</span> <span class="nav-text">设计思想：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#基本概念："><span class="nav-number">2.0.2.</span> <span class="nav-text">基本概念：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现思路："><span class="nav-number">3.</span> <span class="nav-text">实现思路：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#简单实现"><span class="nav-number">4.</span> <span class="nav-text">简单实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何使用："><span class="nav-number">5.</span> <span class="nav-text">如何使用：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#利与弊的思考"><span class="nav-number">6.</span> <span class="nav-text">利与弊的思考</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#改进"><span class="nav-number">7.</span> <span class="nav-text">改进</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">8.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">shayuan</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -285,6 +285,167 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://shayuan.me/2017/11/21/iOS类Redux架构的简单实现及其利弊/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="shayuan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AceSha">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/11/21/iOS类Redux架构的简单实现及其利弊/" itemprop="url">iOS类Redux架构的简单实现及其利弊</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-21T14:48:20+08:00">
+                2017-11-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="文章写作背景介绍："><a href="#文章写作背景介绍：" class="headerlink" title="文章写作背景介绍："></a>文章写作背景介绍：</h2><p>最近准备写一个相册框架，在架构之初希望能达到下面几个要求：</p>
+<ol>
+<li><code>Dry</code>，不臃肿、耦合不严重的架构</li>
+<li>不希望引入第三方框架</li>
+<li>组件间需要通信，比如图片<code>change</code>了需要<code>reload</code></li>
+<li>一些状态组件间共享，并且组件也可能会更改这个状态，比如<code>Config</code></li>
+<li>一个组件的状态需要共享，比如已经实现获取照片后的回调</li>
+</ol>
+<p>思来想去貌似简单的架构都不能同时满足这些要求，想到自己在使用<code>RxSwift</code>系列框架的时候，喜欢使用<code>ReactorKit</code>这个<code>单向数据流状态机</code>的库，另外在<code>非Rx</code>系列的架构中，也有一个<code>ReSwift</code>的<code>单向数据流</code>的库，所以就想尝试着借鉴2者的实现方式，自己实现一个简单的<code>单向数据流</code>的类<code>Redux</code>架构。</p>
+<h2 id="Redux设计思想和概念"><a href="#Redux设计思想和概念" class="headerlink" title="Redux设计思想和概念:"></a><code>Redux</code>设计思想和概念:</h2><h4 id="设计思想："><a href="#设计思想：" class="headerlink" title="设计思想："></a>设计思想：</h4><p><code>Redux</code>的设计思想就是一个<code>App</code>对应一个<code>State</code>，当<code>State</code>改变时候，<code>App</code>做相对应的改变。</p>
+<p>记住这句话，我们再来看一下基本概念：</p>
+<h4 id="基本概念："><a href="#基本概念：" class="headerlink" title="基本概念："></a>基本概念：</h4><ul>
+<li>State: 整个<code>App</code>的状态, 数据层</li>
+<li>Action: 任何需要更新<code>State</code>的操作</li>
+<li>Store: 接受<code>Action</code>并更新<code>State</code>，持有数据，接受订阅</li>
+</ul>
+<p>这是最基本的 3个概念，在<code>Store</code>层，还有 2个数据接受和处理的概念：</p>
+<ul>
+<li>subscribe: 当前类订阅后既可接收<code>Store</code>的<code>State</code>状态更新通知</li>
+<li>reducer: <code>Action</code>转换成<code>State</code>的纯函数方法</li>
+</ul>
+<h2 id="实现思路："><a href="#实现思路：" class="headerlink" title="实现思路："></a>实现思路：</h2><p>整体架构如下图：</p>
+<p><img src="/2017/11/21/iOS类Redux架构的简单实现及其利弊/reduxflow.jpg" alt=""></p>
+<ul>
+<li>首先定义 3个主要协议</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">public protocol ActionType &#123;&#125;</div><div class="line">public protocol StateType &#123;&#125;</div><div class="line"></div><div class="line">public protocol StoreType &#123;</div><div class="line">    func dispatch(_ action: ActionType)</div><div class="line"></div><div class="line">    func subscribe&lt;S: StoreSubscriber&gt;(_ subscriber: S)</div><div class="line"></div><div class="line">    func unsubscribe&lt;S: StoreSubscriber&gt;(_ subscriber: S)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>定义订阅后<code>View</code>层(不限于)更新的协议，用于每次产生一个<code>State</code>的回调</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">public protocol StoreSubscriber: AnyStoreSubscriber &#123;</div><div class="line">    associatedtype StoreSubscriberStateType</div><div class="line"></div><div class="line">    func newState(state: StoreSubscriberStateType)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>实现主要的<code>Store</code>：<br><code>Store</code>类，需要定义<code>State</code>，需要持有订阅的<code>View</code>层，纯函数<code>Reducer</code> 3个属性和实现一个<code>dispatch</code>方法，用来接收<code>Action</code>，并在持有的<code>Reducer</code>纯函数里转化为<code>State</code>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">private var reducer: Reducer&lt;State&gt;</div><div class="line">private var subscribers: [SubscriptionType] = []</div><div class="line">public var state: State</div><div class="line"></div><div class="line">// 接受一个action，并转换成state</div><div class="line">func dispatch(_ action: ActionType)&#123;</div><div class="line">    guard !isDispatching else &#123;</div><div class="line">        fatalError(&quot;dead circle&quot;)</div><div class="line">    &#125;</div><div class="line">    isDispatching = true</div><div class="line">    let newState = reducer(action, state)</div><div class="line">    subscribers.forEach&#123; $0.subscriber?._newState(state: newState) &#125;</div><div class="line">    isDispatching = false</div><div class="line">    state = newState</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 订阅才可以接受dispatch转换的state</div><div class="line">func subscribe&lt;S: StoreSubscriber&gt;(_ subscriber: S) &#123;</div><div class="line">    let box = SubscriptionBox&lt;StateType&gt;(subscriber: subscriber)</div><div class="line">    unsubscribe(subscriber)</div><div class="line">    subscribers.append(box)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="简单实现"><a href="#简单实现" class="headerlink" title="简单实现"></a>简单实现</h2><p>主要结构完成，接下来看看如何使用</p>
+<p>首先定义<code>State</code>, <code>StateInitial</code>只是一个可以忽略的初始化协议。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">public struct AppState: StateType, StateInitial &#123;</div><div class="line"></div><div class="line">    var isLoading: Bool</div><div class="line">    var selectedAssets: [PHAsset] = []</div><div class="line">    </div><div class="line">    var listViewState: ListViewState</div><div class="line">    var gridViewState: GridViewState</div><div class="line">    </div><div class="line">    ······</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>我们把不同页面也单独声明成<code>State</code>保存在<code>AppState</code>里。</p>
+<p>定义需要使用的<code>Action</code>，因为只需要遵循一个<code>ActionType</code>的协议，所以我们有多种定义方式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">enum AppAction: ActionType &#123;</div><div class="line">    case startLoading</div><div class="line">    case endLoading</div><div class="line">    case photoChange(PHChange)</div><div class="line">&#125;</div><div class="line"></div><div class="line">struct StartLoading: ActionType &#123;&#125;</div><div class="line">struct EndLoading: ActionType &#123;&#125;</div></pre></td></tr></table></figure>
+<p>实现最主要的<code>Reducer</code>，我们在此处对<code>Reducer</code>进行了拆分，与<code>AppState</code>的拆分思想一致, 在其他的<code>Reducer</code>里面，将<code>action</code>转换成对应的<code>State</code>即可。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">func MainReducer(action: ActionType, state: State?) -&gt; State &#123;</div><div class="line">    return State(isLoading: loadingReducer(action: action, state: state?.isLoading),</div><div class="line">                 selectedAssets: selectedAssetsReducer(action: action, state: state?.selectedAssets),</div><div class="line">                 listViewState: listDataReducer(action: action, state: state?.listViewState),</div><div class="line">                 gridViewState: gridDataReducer(action: action, state: state?.gridViewState)</div><div class="line">                )</div><div class="line">        </div><div class="line">&#125;</div><div class="line"></div><div class="line">// 其他Reducer</div><div class="line">func loadingReducer(action: ActionType, state: Bool?) -&gt; Bool &#123;</div><div class="line">    var state = state ?? false</div><div class="line"></div><div class="line">    switch action &#123;</div><div class="line">    case _ as StartLoading:</div><div class="line">        state = true</div><div class="line">    case _ as EndLoading:</div><div class="line">        state = false</div><div class="line">    default:</div><div class="line">        break</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return state</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">······</div></pre></td></tr></table></figure>
+<h2 id="如何使用："><a href="#如何使用：" class="headerlink" title="如何使用："></a>如何使用：</h2><p>实现了最主要的<code>Action</code> -&gt; <code>Store</code>(<code>Reducer</code>) -&gt; <code>State</code>后，使用起来也非常简单，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">···</div><div class="line">  override public func viewDidLoad() &#123;</div><div class="line">        super.viewDidLoad()</div><div class="line">        configureUI()</div><div class="line">        // 订阅Store</div><div class="line">        Store.subscribe(self)</div><div class="line">        // 发送一个Action，在下面的协议方法里获取更新的State</div><div class="line">        Store.dispatch(FetchDataAction.fetchListData())</div><div class="line">    &#125;</div><div class="line">···  </div><div class="line">    </div><div class="line">// MARK: - StoreSubscriber</div><div class="line">extension ListViewController: StoreSubscriber &#123;</div><div class="line">    public func newState(state: State) &#123;</div><div class="line">        if state.listViewState.fetchResults.count &gt; 0 </div><div class="line">        &amp;&amp; state.listViewState.fetchResults != results &#123;</div><div class="line">            results = state.listViewState.fetchResults</div><div class="line">			  // 获取结果后更新</div><div class="line">            tableView.reloadData()</div><div class="line">        &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="利与弊的思考"><a href="#利与弊的思考" class="headerlink" title="利与弊的思考"></a>利与弊的思考</h2><p>类似<code>Redux</code>的架构，可以很好把<code>数据层</code>和<code>UI层</code>分离开来，并且可以更全面的覆盖单元测试。而且可以更好的把所有<code>View</code>层状态改变的逻辑代码规整到一起，<code>View</code>层调用<code>Action</code>都必须使用<code>dispatch</code>方法，方便索引。在我的小框架里，我可以在子组件里，不通过代理就更新父组件的状态；也可以在任何子组件，不需要过多耦合的调用父组件的数据或者一些全局状态。</p>
+<p>然而利与弊都是相辅相成的，在使用过程中也发现了以下一些弊端：</p>
+<ol>
+<li>任何<code>Action</code>都会让所有的<code>Subscriber</code>都调用<code>newState(state: State)</code>函数，所以如果是<code>dataSource</code>这种类型的属性，就必须有一个<code>previous State</code>来进行对比，不然可能无时无刻不在<code>reload</code>。</li>
+<li>有时候我只想<code>reload</code>部分<code>[indexPath]</code>，就算我有<code>previous State</code>，但我还是要赋值给<code>State.dataSource</code>，还是会整个<code>reload</code>，解决的思路无外乎给<code>State</code>多一个属性，在和<code>previous State</code>先判断这个属性是否和之前相同。</li>
+<li>可能还有，我还没发现。。。</li>
+</ol>
+<h2 id="改进"><a href="#改进" class="headerlink" title="改进"></a>改进</h2><p>在<code>Store</code>类里面，多保存一个<code>previousState</code>的<code>StateType</code>属性，在订阅的协议里，调用<code>newState(state: State, previousState: State?)</code>这样的函数。这个时候真的是深深怀念<code>RxSwift</code>的<code>distinctUntilChanged</code>。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在<code>Redux</code>的概念里，或者更古老的<code>Flux</code>，整个<code>App</code>对应一个<code>State</code>，<code>ReSwift</code>也是这样的思路。在这种方式下，任何<code>Action</code>的<code>dispatch</code>都会调用任何遵循订阅协议的订阅者来响应状态的改变，这种方式都会带来不必要的性能损耗（在此想吐槽一下现在的Bilibili iOS客户端，是不是重构了，现在性能特差，耗电好猛）。其实我们完全可以单个组件<code>A</code>使用一个<code>AStore</code>来存储响应这个组件的<code>AState</code>，把回调方法修改为：<code>newState(state: State, previousState: State?, appState: AppState)</code>之类的就可以解决。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://shayuan.me/2017/11/02/单元测试/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -856,7 +1017,7 @@
             <h2 id="关于单例"><a href="#关于单例" class="headerlink" title="关于单例"></a>关于单例</h2><ul>
 <li>单例应该只用来保存全局的状态，并且不能和任何作用域绑定。</li>
 <li>理想的实现方式1：使用 AppDelegate(单例)保存属性(SingletonSet)， 在set下保存需要使用的实例，方便reset且有作用域限制。</li>
-<li>理想的实现方式1：依赖注入，显式声明。</li>
+<li>理想的实现方式2：依赖注入，显式声明。</li>
 </ul>
 
           
@@ -1488,7 +1649,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-count">9</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
