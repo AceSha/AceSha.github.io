@@ -100,7 +100,7 @@
 <meta property="og:site_name" content="AceSha">
 <meta property="og:description" content="文章写作背景介绍：最近准备写一个相册框架，在架构之初希望能达到下面几个要求：  Dry，不臃肿、耦合不严重的架构 不希望引入第三方框架 组件间需要通信，比如图片change了需要reload 一些状态组件间共享，并且组件也可能会更改这个状态，比如Config 一个组件的状态需要共享，比如已经实现获取照片后的回调  思来想去貌似简单的架构都不能同时满足这些要求，想到自己在使用RxSwift系列框架的">
 <meta property="og:image" content="http://shayuan.me/2017/11/21/iOS类Redux架构的简单实现及其利弊/reduxflow.jpg">
-<meta property="og:updated_time" content="2017-11-21T07:28:29.000Z">
+<meta property="og:updated_time" content="2017-11-21T08:58:11.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS类Redux架构的简单实现及其利弊">
 <meta name="twitter:description" content="文章写作背景介绍：最近准备写一个相册框架，在架构之初希望能达到下面几个要求：  Dry，不臃肿、耦合不严重的架构 不希望引入第三方框架 组件间需要通信，比如图片change了需要reload 一些状态组件间共享，并且组件也可能会更改这个状态，比如Config 一个组件的状态需要共享，比如已经实现获取照片后的回调  思来想去貌似简单的架构都不能同时满足这些要求，想到自己在使用RxSwift系列框架的">
@@ -399,7 +399,7 @@
 <li>可能还有，我还没发现。。。</li>
 </ol>
 <h2 id="改进"><a href="#改进" class="headerlink" title="改进"></a>改进</h2><p>在<code>Store</code>类里面，多保存一个<code>previousState</code>的<code>StateType</code>属性，在订阅的协议里，调用<code>newState(state: State, previousState: State?)</code>这样的函数。这个时候真的是深深怀念<code>RxSwift</code>的<code>distinctUntilChanged</code>。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在<code>Redux</code>的概念里，整个<code>App</code>对应一个<code>State</code>，<code>ReSwift</code>也是这样的思路。在这种方式下，任何<code>Action</code>的<code>dispatch</code>都会调用任何遵循订阅协议的订阅者来响应状态的改变，这种方式都会带来不必要的性能损耗（在此想吐槽一下现在的Bilibili iOS客户端，是不是重构了，现在性能特差，耗电超猛）。其实我们完全可以单个组件<code>A</code>使用一个<code>AStore</code>来存储响应这个组件的<code>AState</code>，把回调方法修改为：<code>newState(state: State, previousState: State?, appState: AppState)</code>之类的就可以解决，我们可以在此获取<code>appState</code>并应用于当前的<code>state</code>，也可以在在当前的<code>A</code>组件中通过<code>Action</code>更改<code>AppState</code>。我们只需要把精力关注在如何对<code>Action</code>处理后的<code>State</code>数据层上，有改变则更新，无改变就保持原样。通过类<code>Redux</code>的方式，我们能更好的体验<code>数据驱动</code>所具有的非凡意义。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在<code>Redux</code>的概念里，整个<code>App</code>对应一个<code>State</code>，<code>ReSwift</code>也是这样的思路。在这种方式下，任何<code>Action</code>的<code>dispatch</code>都会调用任何遵循订阅协议的订阅者来响应状态的改变，这种方式都会带来不必要的性能损耗（在此想吐槽一下现在的Bilibili iOS客户端，是不是重构了，现在性能特差，耗电超猛）。其实我们完全可以单个组件<code>A</code>使用一个<code>AStore</code>来存储响应这个组件的<code>AState</code>，把回调方法修改为：<code>newState(state: State, previousState: State?, appState: AppState)</code>之类的就可以解决，我们可以在此获取<code>appState</code>并应用于当前组件，也可以在在当前的<code>A</code>组件中通过<code>Action</code>更改<code>AppState</code>。这些并不是最好的实现方式，只是指明一个可以优化的方向的思路。通过类<code>Redux</code>的方式，我们只需要把精力关注在<code>Action</code>处理后的<code>State</code>数据层上，有改变则更新，无改变就保持原样，这样我们能更好的体会<code>数据驱动</code>所具有的非凡能力。</p>
 
       
     </div>
