@@ -100,7 +100,7 @@
 <meta property="og:site_name" content="AceSha">
 <meta property="og:description" content="文章写作背景介绍：最近准备写一个相册框架，在架构之初希望能达到下面几个要求：  Dry，不臃肿、耦合不严重的架构 不希望引入第三方框架 组件间需要通信，比如图片change了需要reload 一些状态组件间共享，并且组件也可能会更改这个状态，比如Config 一个组件的状态需要共享，比如已经实现获取照片后的回调  思来想去貌似简单的架构都不能同时满足这些要求，想到自己在使用RxSwift系列框架的">
 <meta property="og:image" content="http://shayuan.me/2017/11/21/iOS类Redux架构的简单实现及其利弊/reduxflow.jpg">
-<meta property="og:updated_time" content="2017-11-21T06:50:09.000Z">
+<meta property="og:updated_time" content="2017-11-21T06:53:22.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS类Redux架构的简单实现及其利弊">
 <meta name="twitter:description" content="文章写作背景介绍：最近准备写一个相册框架，在架构之初希望能达到下面几个要求：  Dry，不臃肿、耦合不严重的架构 不希望引入第三方框架 组件间需要通信，比如图片change了需要reload 一些状态组件间共享，并且组件也可能会更改这个状态，比如Config 一个组件的状态需要共享，比如已经实现获取照片后的回调  思来想去貌似简单的架构都不能同时满足这些要求，想到自己在使用RxSwift系列框架的">
@@ -359,9 +359,12 @@
 <li>一个组件的状态需要共享，比如已经实现获取照片后的回调</li>
 </ol>
 <p>思来想去貌似简单的架构都不能同时满足这些要求，想到自己在使用<code>RxSwift</code>系列框架的时候，喜欢使用<code>ReactorKit</code>这个<code>单向数据流状态机</code>的库，另外在<code>非Rx</code>系列的架构中，也有一个<code>ReSwift</code>的<code>单向数据流</code>的库，所以就想尝试着借鉴2者的实现方式，自己实现一个简单的<code>单向数据流</code>的类<code>Redux</code>架构。</p>
-<h2 id="Redux设计思想和概念"><a href="#Redux设计思想和概念" class="headerlink" title="Redux设计思想和概念:"></a><code>Redux</code>设计思想和概念:</h2><h4 id="设计思想："><a href="#设计思想：" class="headerlink" title="设计思想："></a>设计思想：</h4><p><code>Redux</code>的设计思想就是一个<code>App</code>对应一个<code>State</code>，当<code>State</code>改变时候，<code>App</code>做相对应的改变。</p>
+<h2 id="Redux设计思想和概念"><a href="#Redux设计思想和概念" class="headerlink" title="Redux设计思想和概念:"></a><code>Redux</code>设计思想和概念:</h2><ul>
+<li>设计思想：</li>
+</ul>
+<p><code>Redux</code>的设计思想就是一个<code>App</code>对应一个<code>State</code>，当<code>State</code>改变时候，<code>App</code>做相对应的改变。</p>
 <p>记住这句话，我们再来看一下基本概念：</p>
-<h4 id="基本概念："><a href="#基本概念：" class="headerlink" title="基本概念："></a>基本概念：</h4><ul>
+<ul>
 <li>State: 整个<code>App</code>的状态, 数据层</li>
 <li>Action: 任何需要更新<code>State</code>的操作</li>
 <li>Store: 接受<code>Action</code>并更新<code>State</code>，持有数据，接受订阅</li>
@@ -585,7 +588,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#文章写作背景介绍："><span class="nav-number">1.</span> <span class="nav-text">文章写作背景介绍：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redux设计思想和概念"><span class="nav-number">2.</span> <span class="nav-text">Redux设计思想和概念:</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#设计思想："><span class="nav-number">2.0.1.</span> <span class="nav-text">设计思想：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#基本概念："><span class="nav-number">2.0.2.</span> <span class="nav-text">基本概念：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现思路："><span class="nav-number">3.</span> <span class="nav-text">实现思路：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#简单实现"><span class="nav-number">4.</span> <span class="nav-text">简单实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何使用："><span class="nav-number">5.</span> <span class="nav-text">如何使用：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#利与弊的思考"><span class="nav-number">6.</span> <span class="nav-text">利与弊的思考</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#改进"><span class="nav-number">7.</span> <span class="nav-text">改进</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">8.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#文章写作背景介绍："><span class="nav-number">1.</span> <span class="nav-text">文章写作背景介绍：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redux设计思想和概念"><span class="nav-number">2.</span> <span class="nav-text">Redux设计思想和概念:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现思路："><span class="nav-number">3.</span> <span class="nav-text">实现思路：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#简单实现"><span class="nav-number">4.</span> <span class="nav-text">简单实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何使用："><span class="nav-number">5.</span> <span class="nav-text">如何使用：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#利与弊的思考"><span class="nav-number">6.</span> <span class="nav-text">利与弊的思考</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#改进"><span class="nav-number">7.</span> <span class="nav-text">改进</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">8.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
 
           </div>

@@ -362,9 +362,12 @@
 <li>一个组件的状态需要共享，比如已经实现获取照片后的回调</li>
 </ol>
 <p>思来想去貌似简单的架构都不能同时满足这些要求，想到自己在使用<code>RxSwift</code>系列框架的时候，喜欢使用<code>ReactorKit</code>这个<code>单向数据流状态机</code>的库，另外在<code>非Rx</code>系列的架构中，也有一个<code>ReSwift</code>的<code>单向数据流</code>的库，所以就想尝试着借鉴2者的实现方式，自己实现一个简单的<code>单向数据流</code>的类<code>Redux</code>架构。</p>
-<h2 id="Redux设计思想和概念"><a href="#Redux设计思想和概念" class="headerlink" title="Redux设计思想和概念:"></a><code>Redux</code>设计思想和概念:</h2><h4 id="设计思想："><a href="#设计思想：" class="headerlink" title="设计思想："></a>设计思想：</h4><p><code>Redux</code>的设计思想就是一个<code>App</code>对应一个<code>State</code>，当<code>State</code>改变时候，<code>App</code>做相对应的改变。</p>
+<h2 id="Redux设计思想和概念"><a href="#Redux设计思想和概念" class="headerlink" title="Redux设计思想和概念:"></a><code>Redux</code>设计思想和概念:</h2><ul>
+<li>设计思想：</li>
+</ul>
+<p><code>Redux</code>的设计思想就是一个<code>App</code>对应一个<code>State</code>，当<code>State</code>改变时候，<code>App</code>做相对应的改变。</p>
 <p>记住这句话，我们再来看一下基本概念：</p>
-<h4 id="基本概念："><a href="#基本概念：" class="headerlink" title="基本概念："></a>基本概念：</h4><ul>
+<ul>
 <li>State: 整个<code>App</code>的状态, 数据层</li>
 <li>Action: 任何需要更新<code>State</code>的操作</li>
 <li>Store: 接受<code>Action</code>并更新<code>State</code>，持有数据，接受订阅</li>
