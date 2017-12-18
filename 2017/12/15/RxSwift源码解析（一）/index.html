@@ -93,17 +93,17 @@
 
 
 
-<meta name="description" content="##RxSwift源码解析 （一）本篇文章主要分析一下Observable是如何创建的、其生命周期的管理，subscribe时候event事件如何发出，dispose()的内部作用，以及热信号和冷信号等一些问题。而其他的，诸如Swift、RxSwift的优点等一大堆惯用开头语，以及RxSwift里面一些技巧性的Swift用法和设计模式，譬如命名空间、POP等，本文将不再赘述。">
+<meta name="description" content="本篇文章主要分析一下Observable是如何创建的、其生命周期的管理，subscribe时候event事件如何发出，dispose()的内部作用，以及热信号和冷信号等一些问题。而其他的，诸如Swift、RxSwift的优点等一大堆惯用开头语，以及RxSwift里面一些技巧性的Swift用法和设计模式，譬如命名空间、POP等，本文将不再赘述。">
 <meta name="keywords" content="RxSwift">
 <meta property="og:type" content="article">
 <meta property="og:title" content="RxSwift源码解析（一）">
 <meta property="og:url" content="http://shayuan.me/2017/12/15/RxSwift源码解析（一）/index.html">
 <meta property="og:site_name" content="AceSha">
-<meta property="og:description" content="##RxSwift源码解析 （一）本篇文章主要分析一下Observable是如何创建的、其生命周期的管理，subscribe时候event事件如何发出，dispose()的内部作用，以及热信号和冷信号等一些问题。而其他的，诸如Swift、RxSwift的优点等一大堆惯用开头语，以及RxSwift里面一些技巧性的Swift用法和设计模式，譬如命名空间、POP等，本文将不再赘述。">
-<meta property="og:updated_time" content="2017-12-18T09:14:07.602Z">
+<meta property="og:description" content="本篇文章主要分析一下Observable是如何创建的、其生命周期的管理，subscribe时候event事件如何发出，dispose()的内部作用，以及热信号和冷信号等一些问题。而其他的，诸如Swift、RxSwift的优点等一大堆惯用开头语，以及RxSwift里面一些技巧性的Swift用法和设计模式，譬如命名空间、POP等，本文将不再赘述。">
+<meta property="og:updated_time" content="2017-12-18T09:17:06.087Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RxSwift源码解析（一）">
-<meta name="twitter:description" content="##RxSwift源码解析 （一）本篇文章主要分析一下Observable是如何创建的、其生命周期的管理，subscribe时候event事件如何发出，dispose()的内部作用，以及热信号和冷信号等一些问题。而其他的，诸如Swift、RxSwift的优点等一大堆惯用开头语，以及RxSwift里面一些技巧性的Swift用法和设计模式，譬如命名空间、POP等，本文将不再赘述。">
+<meta name="twitter:description" content="本篇文章主要分析一下Observable是如何创建的、其生命周期的管理，subscribe时候event事件如何发出，dispose()的内部作用，以及热信号和冷信号等一些问题。而其他的，诸如Swift、RxSwift的优点等一大堆惯用开头语，以及RxSwift里面一些技巧性的Swift用法和设计模式，譬如命名空间、POP等，本文将不再赘述。">
 
 
 
@@ -349,9 +349,9 @@
       
 
       
-        <p>##RxSwift源码解析 （一）<br>本篇文章主要分析一下<code>Observable</code>是如何创建的、其<code>生命周期</code>的管理，<code>subscribe</code>时候<code>event</code>事件如何发出，<code>dispose()</code>的内部作用，以及<code>热信号</code>和<code>冷信号</code>等一些问题。而其他的，诸如<code>Swift</code>、<code>RxSwift</code>的优点等一大堆惯用开头语，以及<code>RxSwift</code>里面一些技巧性的<code>Swift</code>用法和设计模式，譬如<code>命名空间</code>、<code>POP</code>等，本文将不再赘述。</p>
+        <p>本篇文章主要分析一下<code>Observable</code>是如何创建的、其<code>生命周期</code>的管理，<code>subscribe</code>时候<code>event</code>事件如何发出，<code>dispose()</code>的内部作用，以及<code>热信号</code>和<code>冷信号</code>等一些问题。而其他的，诸如<code>Swift</code>、<code>RxSwift</code>的优点等一大堆惯用开头语，以及<code>RxSwift</code>里面一些技巧性的<code>Swift</code>用法和设计模式，譬如<code>命名空间</code>、<code>POP</code>等，本文将不再赘述。</p>
 <a id="more"></a>
-<p>###1. 一个代码片段<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">Observable&lt;String&gt;.create &#123; observer -&gt; Disposable in</div><div class="line">    observer.onNext(&quot;hello&quot;)</div><div class="line"></div><div class="line">    return Disposables.create &#123;</div><div class="line">            print(&quot;dispose&quot;)</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    .subscribe &#123; event in</div><div class="line">        print(event)</div><div class="line">    &#125;</div><div class="line">    .dispose()</div></pre></td></tr></table></figure></p>
+<h3 id="1-一个代码片段"><a href="#1-一个代码片段" class="headerlink" title="1. 一个代码片段"></a>1. 一个代码片段</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">Observable&lt;String&gt;.create &#123; observer -&gt; Disposable in</div><div class="line">    observer.onNext(&quot;hello&quot;)</div><div class="line"></div><div class="line">    return Disposables.create &#123;</div><div class="line">            print(&quot;dispose&quot;)</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    .subscribe &#123; event in</div><div class="line">        print(event)</div><div class="line">    &#125;</div><div class="line">    .dispose()</div></pre></td></tr></table></figure>
 <p>这段代码大家应该都不陌生，我选取了其最简单也是最基本的一个表现形式，其打印结果如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">next(hello)</div><div class="line">dispose</div></pre></td></tr></table></figure>
 <p>过程也很简单：</p>
@@ -616,7 +616,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Observable-Create"><span class="nav-number">1.</span> <span class="nav-text">2. Observable.Create</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-subscribe迷宫"><span class="nav-number">2.</span> <span class="nav-text">3 subscribe迷宫</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-事件传递流程"><span class="nav-number">3.</span> <span class="nav-text">4. 事件传递流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-生命周期"><span class="nav-number">4.</span> <span class="nav-text">5. 生命周期</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-一个代码片段"><span class="nav-number">1.</span> <span class="nav-text">1. 一个代码片段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Observable-Create"><span class="nav-number">2.</span> <span class="nav-text">2. Observable.Create</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-subscribe迷宫"><span class="nav-number">3.</span> <span class="nav-text">3 subscribe迷宫</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-事件传递流程"><span class="nav-number">4.</span> <span class="nav-text">4. 事件传递流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-生命周期"><span class="nav-number">5.</span> <span class="nav-text">5. 生命周期</span></a></li></ol></div>
             
 
           </div>
