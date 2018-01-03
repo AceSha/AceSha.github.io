@@ -592,8 +592,7 @@
 
       
         
-          
-            <h3 id="普通开发"><a href="#普通开发" class="headerlink" title="普通开发"></a>普通开发</h3><p>在<code>说教</code>开始之前，我们先回忆一下我们平时开发时候的场景：</p>
+          <h3 id="普通开发"><a href="#普通开发" class="headerlink" title="普通开发"></a>普通开发</h3><p>在<code>说教</code>开始之前，我们先回忆一下我们平时开发时候的场景：</p>
 <p>场景1：开发中：</p>
 <ol>
 <li>书写一段代码</li>
@@ -610,97 +609,13 @@
 <li>重复<code>场景1</code> 的 <code>3 -&gt; 5</code></li>
 </ol>
 <p>场景3: QA发现了一些bug，调试半天发现是一段需求变更修改代码导致的低级错误。<code>🙂 keep cool man.</code><br>场景… </p>
-<p>如果你和我一样选择的语言是<code>Swift</code>且没有做编译优化的话: 🙂</p>
-<p>好了我这么啰嗦和你这样调试代码<code>无疑是对美好生命和绚丽青春的巨大浪费</code>，所以我们还是直接进入<code>说教</code>环节吧。</p>
-<p><code>Apple</code>自<code>Xcode 5</code>引入<code>XCTest</code>， 在这里我们引入一个<code>测试驱动开发(Test Driven Development，以下简称TDD)</code>的概念：</p>
-<h3 id="TDD"><a href="#TDD" class="headerlink" title="TDD"></a>TDD</h3><p>TDD是一种相对于普通思维的方式来说，比较极端的一种做法。我们一般能想到的是先编写业务代码，然后为其编写测试代码，用来验证产品方法是不是按照设计工作。而TDD的思想正好与之相反，在TDD的世界中，我们应该首先根据需求或者接口情况编写测试，然后再根据测试来编写业务代码。</p>
-<pre><code>这就相当于先给定一个准则或者是具体目标，你的行为必须要达到这个目标才算及格。
-拓展到代码层次就是先给一个结果，你的代码要 `==` 这个结果才算合格的代码。
-不难理解。
-</code></pre><p>TDD的妙处即在于，它以需求为引领，通过测试的形式，来指导开发者进行软件的设计与架构，并编写出最为精炼的代码，使得测试用例运行通过。经过适当的重构之后，测试用例与产品代码可达到较为健康的状态。<br>当然你也可以把单元测试用作<code>Development</code> then <code>Test</code>。<br>还有其他一些概念，将在接下来的例子里面穿插讲解。</p>
-<p>我们用<code>XCode</code>自带的<code>XCTest</code>来试写一个<code>TDD</code>的应用。<br>我们选择最常用的登录界面。<br><img src="/2017/11/02/单元测试/login.jpg" alt=""></p>
-<p>暂时使用<code>MVC</code>架构，如果你察觉出这个架构对单元测试的影响，等<code>MVC</code>庞大起来有很多代码都无法测试，那我们下面几篇可以来讲讲架构啊。</p>
-<p>我们设想每次限制的逻辑如下：</p>
-<ol>
-<li><code>account</code>需要输入的是邮箱地址，且长度 &gt;= 8</li>
-<li><code>password</code>输入纯数字，且长度 &gt;= 6</li>
-<li><code>account</code>、<code>password</code> 都符合条件时<code>Login</code>按钮才可点击</li>
-<li><code>password</code>正确时登录，不正确弹窗提示</li>
-<li>Todo: 登录后界面，设计UI测试。</li>
-</ol>
-<p>那么接下来，我们按照<code>TDD</code>的思想，应该先写业务代码，还是测试代码呢？</p>
-<p>不清楚的回去重读<code>TDD</code>的定义！</p>
-<p>我们要在<code>Tests</code>里面动刀了。鉴于是基础篇教程，我们先介绍一下<code>Tests</code>里面默认的4个方法的意义。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">//在以`XCTestCase` 为子类的类里，所有以`test`开头的方法都是可测试的方法。</div><div class="line">//我们对测试方法的明名可以遵循以下规则</div><div class="line">// test + 对测试内容的描述</div><div class="line"></div><div class="line">	// 在测试执行本类所有`test`方法前执行`setUp`</div><div class="line">   override func setUp() &#123;</div><div class="line">       super.setUp()</div><div class="line">   &#125;</div><div class="line">   //在本类所有`test`方法执行完后执行`tearDown`，可以在此将属性释放</div><div class="line">   override func tearDown() &#123;</div><div class="line">       </div><div class="line">       super.tearDown()</div><div class="line">   &#125;</div><div class="line">   //一个测试方法</div><div class="line">   func testExample() &#123;</div><div class="line">   &#125;</div><div class="line">   //性能测试，比如测试数据库加载筛选时间，数据处理时间，json转模型时间等。</div><div class="line">   func testPerformanceExample() &#123;</div><div class="line">       self.measure &#123;</div><div class="line">       &#125;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
-<p>OK，了解基础定义后我们先写一个<code>account</code>的测试方法。<br>将测试方法分成 given、when 和 then 三个部分是一种好的做法：</p>
-<ol>
-<li>在given部分中，设置所需的任何值。在此示例中，让<code>account</code>的<code>text</code> = <code>test</code>。</li>
-<li>在when部分中，执行被测试代码——调用方法validateAccount()。</li>
-<li>在then部分中，断言你期望的结果。</li>
-</ol>
-<p>另外，Given-When-Then结构来源于行为驱动测试(Behavior Driven Development，简称BDD)中的易于理解的行业术语。其实，你还可以使用另外一些命名系统，例如Arrange-Act-Assert和Assemble-Activate-Assert，等等。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">//测试Login的Account是否有效。 这个方法名真是不好理解。。。</div><div class="line">    func testLoginAccountValidate() &#123;</div><div class="line">        //given</div><div class="line">        viewController.account.text = &quot;test&quot;</div><div class="line">        //when</div><div class="line">        let validate: Bool = viewController.account.text!.validateAccount()</div><div class="line">        //then</div><div class="line">        XCTAssertTrue(validate, &quot;account不是有效的用户名&quot;)</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
-<p>我们并没有在<code>VC</code>里面刻意的多写代码，我们并不希望以此让你来理解<code>MVC</code>架构的不合理之处。当然现在流行的<code>MVVM</code>,<code>MVP</code>,<code>VIPER</code>广义上来说，都没有脱离<code>MVC</code>这个大领域，只是相对而言，解耦处理的更好而已。</p>
-<p>我们希望<code>String</code>有一个拓展方法<code>validateAccount()</code>来判断它是否是合适的<code>account</code>。当输入的文本符合<code>account</code>的限制时候，这个方法才会返回<code>true</code>。<br>以<code>XCTAssert</code>开头的是<code>XCTest</code>的一些断言方法，方法本身不难理解，我们将在<code>Demo</code>里面做一些注释。</p>
-<p>我们新建一个<code>String+Ext.swift</code>的文件，输入以下代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">extension String &#123;</div><div class="line">    func validateAccount() -&gt; Bool &#123;</div><div class="line">        if self.count &lt; 8 &#123; return false &#125;</div><div class="line"></div><div class="line">        let pattern = &quot;^([a-z0-9_\\.-]+)@([\\da-z\\.-]+)\\.([a-z\\.]&#123;2,6&#125;)$&quot;</div><div class="line">        let regex = try! NSRegularExpression(pattern: pattern,</div><div class="line">                                        options: .caseInsensitive)</div><div class="line"></div><div class="line">        let matches = regex.matches(in: self,</div><div class="line">                                    options: [],</div><div class="line">                                    range: NSMakeRange(0, self.utf16.count))</div><div class="line">        return matches.count &gt; 0</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>这是一个对字符个数和邮箱判断的正则。<br>在此测试方法中，我们假定输入的文本是<code>test</code>, 当然按照我们的限制，断言是不能通过的，如果你<code>⌘ + U</code>测试的话，会得到一个<code>❌</code>。而<code>TDD</code>的正确流程你可以理解为<code>❌</code> -&gt; <code>✅</code> -&gt; <code>重构方法</code>。 当然在你对整个应用进行重构或需求变更的时候，<code>重构方法</code>这步务必省略。<br>我们接下来补齐缺失的方法。</p>
-<p>我们修改<code>test</code>的<code>given</code>阶段代码为：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">viewController.account.text = &quot;qq@qq.com&quot;</div></pre></td></tr></table></figure>
-<p>我们再<code>⌘ + U</code>，bingo，得到一个<code>✅</code>。</p>
-<p>试想一下我们的业务代码或者测试代码有没有需要修改的地方？在我们开发阶段，写完<code>String+Ext.swift</code>的代码后，我们并不能确定正则或是我们的方法有效，而且我们并不是每次都需要对<code>viewController.account.text</code>进行赋值后才可以测试。所以我们应该先修改测试代码，先测试<code>数据</code>部分，在此处细分是<code>数据处理</code>，这可能是你需要遵循的一个准则。</p>
-<p>我们修改一下测试代码，<code>⌘ + N</code>新建一个测试类<code>Unit Test Case Class</code>类继承自<code>XCTestCase</code>，并命名为<code>ValidateTests</code>，代码如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">import XCTest</div><div class="line">@testable import Login</div><div class="line"></div><div class="line">class ValidateTests: XCTestCase &#123;</div><div class="line"></div><div class="line">    func testStringExtensionValidateAccount() &#123;</div><div class="line">        let account1 = &quot;1234567&quot;</div><div class="line">        let account2 = &quot;abcdefg&quot;</div><div class="line">        let account3 = &quot;a@q.cn&quot;</div><div class="line">        let account4 = &quot;aa@q.com&quot;</div><div class="line"></div><div class="line">		 //when + then 放在了一起</div><div class="line">        XCTAssertFalse(account1.validateAccount())</div><div class="line">        XCTAssertFalse(account2.validateAccount())</div><div class="line">        XCTAssertFalse(account3.validateAccount())</div><div class="line">        XCTAssertTrue(account4.validateAccount())</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>我们在此处快速写一个测试用例，用以测试我们的分类方法是否正确。以上的测试结果当然是<code>✅</code>的。是不是省去了每次输入的麻烦，且保证了这个最小测试单元的正确性？</p>
-<p>我们在此补足判断<code>password</code>是否<code>validate</code>的测试用例。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">func testStringExtensionValidatePassword() &#123;</div><div class="line">    let pwd = &quot;12345&quot;</div><div class="line">    let pwd2 = &quot;abcdefg&quot;</div><div class="line">    let pwd3 = &quot;a123456&quot;</div><div class="line">    let pwd4 = &quot;1234567&quot;</div><div class="line"></div><div class="line">    XCTAssertFalse(pwd.validatePassword())</div><div class="line">    XCTAssertFalse(pwd2.validatePassword())</div><div class="line">    XCTAssertFalse(pwd3.validatePassword())</div><div class="line">    XCTAssertTrue(pwd4.validatePassword())</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>然后去补充分类的<code>validatePassword()</code>方法：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">func validatePassword() -&gt; Bool &#123;</div><div class="line">    //if self.count &lt; 6 &#123; return false &#125;</div><div class="line">    let pattern = &quot;^\\d&#123;6,&#125;$&quot;</div><div class="line">    let regex = try! NSRegularExpression(pattern: pattern,</div><div class="line">                                         options: .caseInsensitive)</div><div class="line"></div><div class="line">    let matches = regex.matches(in: self,</div><div class="line">                                options: [],</div><div class="line">                                range: NSMakeRange(0, self.utf16.count))</div><div class="line">    return matches.count &gt; 0</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>其实实际上第一次的正则写错了，然后很快的测试并修改了过来，并且可以注释掉第一个行的判断，这就是单元测试啊。</p>
-<p>接下来我们来做登录的测试和业务代码。我们给定一个账号<code>me@qq.com</code>, 密码是<code>1234567</code>。我们分一下步骤：</p>
-<ol>
-<li>当<code>account</code>和<code>password</code>都符合限制的时候，我们的<code>Login</code>按钮要变成可用</li>
-<li>当<code>account</code> == <code>me@qq.com</code> 时：继续<code>3</code>, <code>4</code></li>
-<li>当<code>password</code> 不等于 <code>1234567</code> 时：提示密码错误</li>
-<li>当<code>password</code> 等于 <code>1234567</code> 时：登录成功</li>
-</ol>
-<p>请大家记住此时我们的文字描述，这将是下一节<code>BDD</code>的重点。在此你只需要知道有这么个东西并给你一点点开端的启示。</p>
-<p>那我们接下来先在<code>LoginTests</code>书写测试代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">func testLoginAction() &#123;</div><div class="line"></div><div class="line">    //given</div><div class="line">    viewController.account.text = &quot;q.com&quot;</div><div class="line">    viewController.password.text = &quot;1234567&quot;</div><div class="line"></div><div class="line">    XCTAssertFalse(viewController.loginButton.isEnabled, &quot;account不是有效的用户名&quot;)</div><div class="line">    viewController.account.text = &quot;me@qq.com&quot;</div><div class="line">    viewController.password.text = &quot;123456&quot;</div><div class="line">    XCTAssertFalse(viewController.loginButton.isEnabled, &quot;password密码长度不足&quot;)</div><div class="line"></div><div class="line">    viewController.password.text = &quot;123456888&quot;</div><div class="line">    XCTAssertFalse(viewController.login(), &quot;password密码错误&quot;)</div><div class="line"></div><div class="line">    viewController.password.text = &quot;1234567&quot;</div><div class="line">    XCTAssertTrue(viewController.login())</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>并且，我们需要在<code>setUp</code>方法最后，加入这段代码<code>viewController.loginButton.isEnabled = false</code>。让一些依赖在最开始的时候是正确的状态。</p>
-<p>我们需要补足<code>ViewController</code>里面的代码，在原有代码的基础上，加入以下代码即可，然后我们<code>⌘ + U</code> 测试一下，又是成功的。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">var isLoginEnable = false</div><div class="line"></div><div class="line">override func viewDidLoad() &#123;</div><div class="line">    super.viewDidLoad()</div><div class="line">    account.addTarget(self, action: #selector(textDidChanged(tf:)), for: .editingChanged)</div><div class="line">    password.addTarget(self, action: #selector(textDidChanged(tf:)), for: .editingChanged)</div><div class="line">&#125;</div><div class="line"></div><div class="line">@objc func textDidChanged(tf: UITextField) &#123;</div><div class="line">    isLoginEnable = account.text!.validateAccount() &amp;&amp; password.text!.validatePassword()</div><div class="line">    loginButton.isEnabled = isLoginEnable</div><div class="line">&#125;</div><div class="line"></div><div class="line">@IBAction func LoginAction(_ sender: Any) &#123;</div><div class="line">    let success = login()</div><div class="line">    alert(success: success)</div><div class="line">&#125;</div><div class="line"></div><div class="line">func login() -&gt; Bool &#123;</div><div class="line">    return password.text == &quot;1234567&quot; &amp;&amp; account.text == &quot;me@qq.com&quot;</div><div class="line">&#125;</div><div class="line"></div><div class="line">func alert(success: Bool) &#123;</div><div class="line">    let message = success ? &quot;success&quot; : &quot;fail&quot;</div><div class="line">    let alertVC = UIAlertController(title: &quot;Note&quot;, message: message, preferredStyle: .alert)</div><div class="line">    alertVC.addAction(UIAlertAction(title: &quot;OK&quot;, style: .cancel, handler: nil))</div><div class="line"></div><div class="line">    present(alertVC, animated: true, completion: nil)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>OK，到此我们算是完成了登录界面的简单逻辑判断，省去了我们很多<code>run</code> -&gt; <code>interact</code> -&gt; <code>test</code> 的浪费生命的操作，而且足够高逼格不是？手动试一下也没问题。</p>
-<h3 id="异步测试"><a href="#异步测试" class="headerlink" title="异步测试"></a>异步测试</h3><p>接下来正规的登录，都是要进行联网操作的，而且联网都是异步操作，那么异步操作如何测试呢？我们希望上例中的<code>loginAction(_:)</code>会调用一个异步方法，那么我们可以直接书写一个假的<code>Network</code>, 并写入如下代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">class Network &#123;</div><div class="line">    static func fakeLogin(forceSuccess: Bool, closure: @escaping (Bool) -&gt; ()) &#123;</div><div class="line">        DispatchQueue.global().asyncAfter(deadline: .now() + 1.0) &#123;</div><div class="line">            closure(forceSuccess)</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>在此选择的是类方法。但是常规情况下，这可能会是一个实例方法，<code>viewController</code>需要保存一个<code>Network</code>的属性用来<code>cancel</code>当前的请求。在那种情况下，我们的架构，设计方法，测试的类都需要升级一下才能更好的满足需求。</p>
-<p>我们新建一个简单的测试类<code>NetworkTests</code>, 代码如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">func testNetworkAsnycResult() &#123;</div><div class="line">    //given</div><div class="line">    let success = true</div><div class="line">    let promise = expectation(description: &quot;network success&quot;)</div><div class="line">    //when</div><div class="line">    Network.fakeLogin(forceSuccess: success) &#123; result in</div><div class="line"></div><div class="line">        promise.fulfill()</div><div class="line">        XCTAssertTrue(success, &quot;network failed&quot;)</div><div class="line">    &#125;</div><div class="line">    //then</div><div class="line">    waitForExpectations(timeout: 5, handler: nil)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>这个方法检查<code>fakeLogin</code>返回状态是否是<code>True</code>。大部分代码和你在 App 中的写法一样，除了这几行：</p>
-<ol>
-<li>expectation(_:) 返回一个 XCTestExpectation 对象，这个对象保存了一个承诺（promise)，又称作期望(expectation)或未来(future)。参数 description 用于描述你预期的行为。</li>
-<li>为了和描述一致，你可以在异步方法的成功回调块中调用 promise.fullfill()。</li>
-<li>waitForExpections(:_handler:) 保持测试方法的运行，直到所有的 expectation 被 fullfill 或者到达指定超时时间，这两个条件任何一个都行。</li>
-</ol>
-<p>运行测试，bingo，又是正确的。</p>
-<p>当然在实际生产过程中，正确的回调总归能请求来，而错误的状态码却会迟迟得不到。这个时候我们可以<code>stub</code>一些数据来跑测试用例，以验证我们代码是否覆盖了所有可预测的错误。而在有些情况，我们可能需要<code>Mock</code>一个对象来测试代码。有关<code>Stub</code>和<code>Mock</code>，我们也放在下一篇文章来讲解。</p>
-<p>我们修改一下<code>ViewController</code>的代码，并把所有逻辑部分移到一个<code>Extension</code>里面。至于<code>@IBAction</code>，就放那吧。。。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">@IBAction func LoginAction(_ sender: Any) &#123;</div><div class="line">    let success = login()</div><div class="line">    Network.fakeLogin(forceSuccess: success) &#123; flag in</div><div class="line">        DispatchQueue.main.async &#123;</div><div class="line">            self.alert(success: success)</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="代码覆盖"><a href="#代码覆盖" class="headerlink" title="代码覆盖"></a>代码覆盖</h3><p>代码覆盖工具会报告 App 代码有多少经过了测试，你也可以知道那一部分代码还没有经过测试。</p>
-<p>要打开代码覆盖，编辑 scheme 中的 Test，然后勾选 Code Coverage 选项<br><img src="/2017/11/02/单元测试/scheme.jpg" alt=""><br>运行全部测试（command+U)，打开报告导航器（command+8)。选择列表中第一个，然后选择 Coverage 栏：<br><img src="/2017/11/02/单元测试/coverage.jpg" alt=""></p>
-<p>我们发现，还是有些方法很难测试的，不过也不用过于追求100%的代码覆盖率。当然，引用一句话：<code>当你不知道在哪写单元测试的时候，那你的代码就烂透了</code> 🙂</p>
-<p>那么怎样的架构适合单元测试呢？</p>
-<ol>
-<li>类之间要松耦合</li>
-<li>被测试的函数需要产生可测量的结果， 建议 <code>函数式编程</code></li>
-<li>被测试的函数要遵循单一职责</li>
-<li>展示和业务逻辑要分开</li>
-<li>记得重构，不断提高代码的可测性</li>
-</ol>
-<p>这篇文章没有特别强的技术点，只是一种开发上的逻辑改变。我们希望你的代码足够<code>robust</code>，可以应对很多不确定的状况；架构优秀，方便阅读和扩展，方便单元测试的进行。</p>
-<p>接下来的文章预告，会引入一个<code>BDD</code>的测试框架<code>Quick</code> + <code>Nimble</code>，会探讨一下架构相关，会写一下现在流行的<code>RxSwift</code>的单元测试的方法。</p>
-
-          
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/11/02/单元测试/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -809,8 +724,7 @@
 
       
         
-          
-            <h2 id="全局SSH"><a href="#全局SSH" class="headerlink" title="全局SSH"></a>全局SSH</h2><p>默认全局私钥：<code>id_rsa</code>,  公钥<code>id_rsa.pub</code></p>
+          <h2 id="全局SSH"><a href="#全局SSH" class="headerlink" title="全局SSH"></a>全局SSH</h2><p>默认全局私钥：<code>id_rsa</code>,  公钥<code>id_rsa.pub</code></p>
 <ul>
 <li>检测ssh key 是否存在</li>
 </ul>
@@ -827,32 +741,13 @@
 <li>拷贝SSH公钥</li>
 </ul>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pbcopy &lt; ~/.ssh/id_rsa.pub</div></pre></td></tr></table></figure>
-<h2 id="多个SSH"><a href="#多个SSH" class="headerlink" title="多个SSH"></a>多个SSH</h2><p> 如果我们Mac上面已经有了ssh-key再创建ssh-key的话，需要给我们的ssh-key文件取不同的名字，默认是id_rsa，如果不重新起名的话，会把原有的给覆盖掉。</p>
-<ul>
-<li><p>新建SSH并命名</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"> //切换到ssh目录</div><div class="line">cd ~/.ssh</div><div class="line">//新建ssh-key</div><div class="line">ssh-keygen -t rsa -C  &quot;邮箱&quot;</div><div class="line"> // 创建新的rsa，需要重新命名</div><div class="line"> //为新建的ssh-key重新命名</div><div class="line"> //暂时使用 id_rsa_github</div><div class="line">Enter file in which to save the key (/Users/shayuan/.ssh/id_rsa): id_rsa_github</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<ul>
-<li><p>添加新ssh-key到ssh agent中</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"> //因为默认只读取id_rsa，为了让SSH识别新的私钥，需将其添加到SSH agent中：</div><div class="line">ssh-add ~/.ssh/id_rsa_github</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<ul>
-<li>将不同的账号对应的不同的ssh key 和不同的远程服务器关联起来，这个配置是在config下配置的(如果没有config可以自己新建)。</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">#thub user(first@email.com)</div><div class="line">Host github1</div><div class="line"> HostName git.some.com/</div><div class="line"> User git</div><div class="line"> IdentityFile /Users/shayuan/.ssh/id_rsa</div><div class="line"></div><div class="line"># second user(second@email.com)</div><div class="line"> # 建一个github别名，新建的帐号使用这个别名做克隆和更新</div><div class="line">Host github2</div><div class="line"> HostName github.com</div><div class="line"> User git</div><div class="line"> IdentityFile /Users/shayuan/.ssh/id_rsa_github</div></pre></td></tr></table></figure>
-<p>其规则就是：从上至下读取config的内容，在每个Host下寻找对应的私钥。这里将GitHub SSH仓库地址中的git@github.com替换成新建的Host别名如：github2，那么原地址是：git@github.com:username/Mywork.git，替换后应该是：github2:username/Mywork.git.</p>
-<ul>
-<li>在Git仓库添加SSH</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pbcopy &lt; ~/.ssh/id_rsa_github.pub</div></pre></td></tr></table></figure>
-<ul>
-<li>验证</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">ssh -T github2</div><div class="line">//或者ping地址</div><div class="line">ssh -T git@gitlab.sensenets.com</div></pre></td></tr></table></figure>
-
-          
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/10/11/SSH/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -961,29 +856,14 @@
 
       
         
-          
-            <p>依赖：</p>
-<ul>
-<li>ruby </li>
-<li>rvm <code>curl -sSL https://get.rvm.io | bash -s stable --ruby</code></li>
-</ul>
-<p>Jenkins搭建环境：<a href="http://www.jianshu.com/p/41ecb06ae95f" target="_blank" rel="external">http://www.jianshu.com/p/41ecb06ae95f</a><br>加slave节点：<br><a href="http://blog.devzeng.com/blog/ios-ci-with-jenkins.html" target="_blank" rel="external">http://blog.devzeng.com/blog/ios-ci-with-jenkins.html</a></p>
-<p>Jenkins重启，关闭等操作：<a href="http://blog.csdn.net/itfootball/article/details/44876517" target="_blank" rel="external">http://blog.csdn.net/itfootball/article/details/44876517</a><br>url/safe-shutdown</p>
-<p>Jenkins卸载： /Library/Application Support/Jenkins/Uninstall.command  </p>
-<p>Jenkins默认端口8080，修改Jenkins默认端口命令为： java -jar jenkins.war –httpPort=9999</p>
-<p>Jenkins目前只支持到java8，安装java9会出错， java卸载 <a href="http://blog.csdn.net/haozhugogo/article/details/54809545" target="_blank" rel="external">http://blog.csdn.net/haozhugogo/article/details/54809545</a><br>ps： 需要手动删除java9</p>
-<p>可能会出现offline的错误，需要vpn联网。</p>
-<p>添加插件：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Keychains and Provisioning Profiles Management</div><div class="line">Xcode integration</div><div class="line">GitLab</div></pre></td></tr></table></figure>
-<p>配置keychain <a href="http://blog.csdn.net/taishanduba/article/details/50472591" target="_blank" rel="external">http://blog.csdn.net/taishanduba/article/details/50472591</a></p>
-<p>Jenkins配置： <a href="http://blog.csdn.net/taishanduba/article/details/61423121" target="_blank" rel="external">http://blog.csdn.net/taishanduba/article/details/61423121</a></p>
-<p>脚本打包： <a href="http://blog.csdn.net/taishanduba/article/details/50530471" target="_blank" rel="external">http://blog.csdn.net/taishanduba/article/details/50530471</a></p>
-<p>出现 fastlane: command not found 怎么办？</p>
-<p>解决方法一：这个情况一般是由于 jenkins 没有设置正确的 $PATH 环境变量导致的。正确设置的方法为：</p>
-<p>在命令行下执行 echo $PATH，记录下输出的结果<br>在 jenkins 中系统管理-系统设置中，找到 环境变量(Environment variables)<br>在 key 中填写 PATH，在 value 中填写第一步中输出的结果<br>保存即可。<br>解决方法二：请确认您安装 Jenkins 的方式和我们在本文里推荐的方式一致。使用其他方式安装的 Jenkins 也经常会出现此问题。</p>
-<h1 id="FastLane"><a href="#FastLane" class="headerlink" title="FastLane"></a>FastLane</h1><p> <a href="https://whlsxl.github.io" target="_blank" rel="external">https://whlsxl.github.io</a></p>
-
-          
+          <p>随笔<br></p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/10/10/Jenkins-Fastlane-SwiftLint/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1208,20 +1088,16 @@
 
       
         
-          
-            <p>Terminal操作mysql指令前的操作，这两条命令是为了方便直接打开 iTerm 就可以运行mysql命令，而不是必须进入mysql安装目录才能运行。</p>
+          <p>Terminal操作mysql指令前的操作，这两条命令是为了方便直接打开 iTerm 就可以运行mysql命令，而不是必须进入mysql安装目录才能运行。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">1..终端中执行 vi ~/.bash_profile</div><div class="line">2.按键盘的字母i 进入编辑模式</div><div class="line">3.在末尾添加两行</div><div class="line">alias mysql=/usr/local/mysql/bin/mysql</div><div class="line">alias mysqladmin=/usr/local/mysql/bin/mysqladmin</div><div class="line">按esc键,按住shift+冒号  输入wq   即显示为:wq即可保存退出</div><div class="line">4.重新打开窗口即可操作命令</div></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">alias mysql=/usr/local/mysql/bin/mysql</div><div class="line">alias mysqladmin=/usr/local/mysql/bin/mysqladmin</div></pre></td></tr></table></figure>
-<p>重置密码命令：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mysqladmin -u root -p password newpass</div></pre></td></tr></table></figure>
-<p>newpass 是你的新密码<br>5.7的版本不会再给root用户分配默认密码，而是会给一个临时密码，如果你细心的话，安装mysql成功后会弹出一个临时密码让你保存。</p>
-<p>登录：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mysql -u root -p</div></pre></td></tr></table></figure></p>
-<p>###配置mysql数据库的字符集(防止终端操作数据库出现乱码,做系统的时候数据库乱码)</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">1.进入系统偏好设置--&gt;MySql--&gt;停用mysql的服务</div><div class="line">2、在终端中执行 sudo -s</div><div class="line">3、输入电脑管理员的密码</div><div class="line">4、cp /usr/local/mysql/support-files/my-default.cnf /etc/my.cnf</div><div class="line">5、vi /etc/my.cnf</div><div class="line">   # 在打开的my.cnf文件中增加如下配置,如何操作呢?点击键盘的 i 字母,即可进入编辑模式</div><div class="line">   [client]</div><div class="line">   default-character-set = utf8 </div><div class="line">   [mysqld]</div><div class="line">   default-storage-engine = INNODB </div><div class="line">   character-set-server = utf8 </div><div class="line">   collation-server = utf8_general_ci </div><div class="line">6、按esc键</div><div class="line">7、输入 :wq</div><div class="line">8、进入系统偏好设置--&gt;MySql--&gt;重启mysql的服务</div></pre></td></tr></table></figure>
-<p>登录后查看编码类型：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">show variables like &apos;%char%&apos;;</div><div class="line"></div><div class="line"># 以下是OK的</div><div class="line">+--------------------------+--------------------------------------------------------+</div><div class="line">| Variable_name            | Value                                                  |</div><div class="line">+--------------------------+--------------------------------------------------------+</div><div class="line">| character_set_client     | utf8                                                   |</div><div class="line">| character_set_connection | utf8                                                   |</div><div class="line">| character_set_database   | utf8                                                   |</div><div class="line">| character_set_filesystem | binary                                                 |</div><div class="line">| character_set_results    | utf8                                                   |</div><div class="line">| character_set_server     | utf8                                                   |</div><div class="line">| character_set_system     | utf8                                                   |</div><div class="line">| character_sets_dir       | /usr/local/mysql-5.1.65-osx10.6-x86_64/share/charsets/ |</div><div class="line">+--------------------------+--------------------------------------------------------+</div><div class="line">8 rows in set (0.00 sec)</div></pre></td></tr></table></figure>
-
-          
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/09/07/Python学习之MySQL相关/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1802,8 +1678,8 @@
       <div class="footer-inner">
         <div class="copyright" >
   
-  &copy; 
-  <span itemprop="copyrightYear">2017</span>
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
