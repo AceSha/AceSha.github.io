@@ -352,160 +352,15 @@
 
       
         
-          
-            <h3 id="1-开篇"><a href="#1-开篇" class="headerlink" title="1. 开篇"></a>1. 开篇</h3><p>有关iOS项目的模块化/组件化的探讨，在最近2年内被反复提及。模块化的解决方案也是层出不穷。很多方案都很优秀，尤其在OC语言的项目中，因其特有的<code>runtime</code>机制，可以做到模块彼此间相对无感的<code>register</code>过程。或者如<code>CTMediator</code>一样的，简单粗暴的用<code>category</code> + <code>Target-Action</code>的方式，就解决了。</p>
-<p>然而这些基于<code>runtime</code>方式的组件化解决方案，用在<code>swift</code>的项目上，总会有些不尽如人意的地方。<br>比如你用router的方式，需要注册一些url，如果在OC项目中，可以直接在<code>+ load</code> 方法里写，程序在启动时都会调用到。然而在swift的类里，<code>+load</code>方法等都已经被废弃，所以你想注册的时候，又不可避免的要在<code>AppDelegate</code>的代理方法里面写很多<code>ModuleXXX.register()</code>这样的代码。<br>又比如你的模块A，想要获取App进入后台时候的回调，那就必须要暴露出一个接口，然后在你的壳项目的AppDelegate文件里面导入模块A，再调用响应接口。<br>再如<code>CTMediator</code>的方式，其实还是没有完全杜绝硬编码的情况，一些模块间的参数传递都是使用的字符串，而且<code>Target-Action</code>的方法命名也是着实的长，看着累。。</p>
-<h3 id="2-解决方案"><a href="#2-解决方案" class="headerlink" title="2. 解决方案"></a>2. 解决方案</h3><p>之于OC的方式，我们也希望Swift的项目也能达到如此灵活和优雅。传统的<code>runtime</code>方式不好解决，我们可以另辟蹊径的处理一下。</p>
-<p>本项目目前的解决方案就是在<code>Modularization</code>库里面，依然使用一个简单的OC类，在<code>+load</code>方法中，动态的将所有继承自<code>AppDelegateEntry</code>的类注册成实例。类似这样：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">@implementation _Load</div><div class="line"></div><div class="line">+ (void)load &#123;</div><div class="line">    [[Modularization shared] registerEntries];</div><div class="line">&#125;</div><div class="line"></div><div class="line">@end</div></pre></td></tr></table></figure>
-<p>先说一下 <code>AppDelegateEntry</code>，其声明如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">open class AppDelegateEntry: NSObject, ModuleLifeCycleDelegate</div></pre></td></tr></table></figure>
-<p><code>ModuleLifeCycleDelegate</code>是一个协议，其声明的协议都在<code>UIApplicationDelegate</code>里面，目的是为了调用时候的api统一。</p>
-<p>之所以用的是继承而非遵循协议，是因为动态生成的类都需要继承自<code>NSObject</code>, 已经如此丑陋且必须继承了，于是就成这样了。</p>
-<p>再说为何要直接生成实例。其实我也觉得这样依然丑陋，虽然这些性能损耗在当前的硬件环境下不值一提。因为每个实例都需要在<code>AppDelegate</code>的协议方法中调用，也就是必须在<code>didFinishLaunchingWithOptions</code>里面就要初始化完成，初步的使用方案如下:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">public class ModuleAEntry: AppDelegateEntry &#123;</div><div class="line">    public func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]?) -&gt; Bool &#123;</div><div class="line"></div><div class="line">        print(&quot;ModuleAEntry application didFinishLaunching&quot;)</div><div class="line"></div><div class="line">        Mediator.register(ModuleAEntry.self, for: ModuleAProtocol.self)</div><div class="line"></div><div class="line">        return true</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>然后在壳项目里面就可以这样调用： </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">class AppDelegate: UIResponder, UIApplicationDelegate &#123;</div><div class="line"></div><div class="line">    var window: UIWindow?</div><div class="line"></div><div class="line"></div><div class="line">    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -&gt; Bool &#123;</div><div class="line"></div><div class="line">        AllModules.application(application, didFinishLaunchingWithOptions: launchOptions)</div><div class="line"></div><div class="line">        return true</div><div class="line">    &#125;</div><div class="line">    ...</div></pre></td></tr></table></figure>
-<p><code>Mediator</code>的方式我们后面会介绍，主要是一个可选的模块间调用的解决方案。就是简单的依赖一个公开的<code>protocol</code>公共库，让每个需要暴露接口留待调用的模块都依赖并进行注册，在程序运行时就可以动态获取遵循协议的类，进行动态的调用。</p>
-<p><code>ModuleAEntry</code>已经继承了<code>AppDelegateEntry</code>，而我们还没有解决最关键的问题，就是如何获取所有继承自<code>AppDelegateEntry</code>。</p>
-<p>其实我们完全可以使用一个公众库，在此将所有模块的<code>Entry</code>进行注册。然而这样也违背了组件化的初衷。我们更希望拿来即用，而免去其他一些不必要的操作。</p>
-<p>所以我们希望能按照一定的规范，只书写在本模块内而不需要在集成时手动注册，也能在集成的时候被其他库所使用。</p>
-<p>在此，借鉴了<code>FengNiao</code>和<code>R.swift</code>库的实现方式，创建了一个命令行工具<a href="https://github.com/AceSha/ModuleSearch" target="_blank" rel="external">ModuleSearch</a>，它可以读取<code>xcodeproj</code>内的实际内容<code>project.pbxproj</code>，分析里面的结构，读取到所有<code>Pods</code>库和<code>target</code>的<code>*.swift</code>文件，用正则匹配出所有继承自<code>AppDelegateEntry</code>的类，并输出成<code>ModuleMap.plist</code>文件。</p>
-<p><strong>这样就可以在壳项目集成的时候，新建一个<code>run scrpit</code>，添加类似于<code>&quot;$PODS_ROOT/ModuleSearch/map&quot; generate</code>这样的命令，运行后拖入<code>ModuleMap.plist</code>，即完成了组件化最终壳项目的搭建工作。</strong></p>
-<h3 id="3-关于Mediator"><a href="#3-关于Mediator" class="headerlink" title="3. 关于Mediator"></a>3. 关于Mediator</h3><p>借鉴<code>MGJRouter</code>，使用了更<code>swift</code>的方式进行表达。<br>一个例子：<br><code>ModuleAEntry</code>的接口遵循<code>ModuleAProtocol</code>：</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">protocol</span> <span class="title">ModuleAProtocol</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">func</span> <span class="title">register</span><span class="params">(name: String, pwd: String)</span></span></div><div class="line">    <span class="function"><span class="keyword">func</span> <span class="title">mainVC</span><span class="params">(name: String)</span></span> -&gt; <span class="type">UIViewController</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">extension</span> <span class="title">ModuleAEntry</span>: <span class="title">ModuleAProtocol</span> </span>&#123;</div><div class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">func</span> <span class="title">register</span><span class="params">(name: String, pwd: String)</span></span> &#123;</div><div class="line">        <span class="built_in">print</span>(<span class="string">"register"</span>, name, pwd)</div><div class="line">    &#125;</div><div class="line">    ...</div></pre></td></tr></table></figure>
-<p>那么注册的时候：</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ModuleAEntry</span>: <span class="title">AppDelegateEntry</span> </span>&#123;</div><div class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">func</span> <span class="title">application</span><span class="params">(<span class="number">_</span> application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]?)</span></span> -&gt; <span class="type">Bool</span> &#123;</div><div class="line">        <span class="type">Mediator</span>.register(<span class="type">ModuleAEntry</span>.<span class="keyword">self</span>, <span class="keyword">for</span>: <span class="type">ModuleAProtocol</span>.<span class="keyword">self</span>)</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>调用：</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="type">Mediator</span>.service(of: <span class="type">ModuleAProtocol</span>.<span class="keyword">self</span>)</div><div class="line">        .register(name: <span class="string">"root"</span>, pwd: <span class="string">"12345"</span>)</div></pre></td></tr></table></figure>
-<p>区别于<code>AppDelegateEntry</code>的子类的创建（在程序启动之初就需要使用实例），<code>Mediator</code>的所有<code>Service</code>使用了懒加载的方式创建并缓存。</p>
-<h3 id="4-Demo"><a href="#4-Demo" class="headerlink" title="4. Demo"></a>4. Demo</h3><p>见<a href="https://github.com/AceSha/ModularizationDemo" target="_blank" rel="external">ModularizationDemo</a>.</p>
-<h3 id="5-注意事项"><a href="#5-注意事项" class="headerlink" title="5. 注意事项"></a>5. 注意事项</h3><ul>
-<li>各模块的<code>Entry</code>需要区别定义，如果使用相同的命名，调用时候会出错。建议就用模块名+<code>Entry</code>;</li>
-<li>不用的<code>AppDelegateEntry</code>，不要注释掉，直接删除代码，在<a href="https://github.com/AceSha/ModuleSearch" target="_blank" rel="external">ModuleSearch</a>里未做是否是注释的判断。</li>
-</ul>
-<h3 id="6-设想-amp-Todos"><a href="#6-设想-amp-Todos" class="headerlink" title="6. 设想&amp;Todos"></a>6. 设想&amp;Todos</h3><ol>
-<li>是否可用<code>GCC</code>的<code>Annotation</code>方式，用<code>__attribute</code>定义全局变量之后直接获取？或者其他通过<code>GCC</code>查询区域的方式。可以操作，但鉴于Swift没有宏指令，优雅的实现方式依然未知。</li>
-<li>在 <strong>1</strong> 暂时不能实现的时候，<a href="https://github.com/AceSha/ModuleSearch" target="_blank" rel="external">ModuleSearch</a>对于特殊状态的判断依然不足，希望可以通过更多的项目来检测，欢迎当小白鼠并PR。</li>
-<li>鉴于<a href="https://github.com/AceSha/ModuleSearch" target="_blank" rel="external">ModuleSearch</a>所依赖的<code>project.pbxproj</code>文件分析工具<a href="https://github.com/tomlokhorst/XcodeEdit" target="_blank" rel="external">XcodeEdit</a>已经支持编辑<code>project.pbxproj</code>，考虑自动集成<code>ModuleMap.plist</code>到项目中。</li>
-</ol>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://shayuan.me/2018/01/04/用swift编写命令行/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="shayuan">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="AceSha">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/01/04/用swift编写命令行/" itemprop="url">用swift编写命令行</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-04T17:27:44+08:00">
-                2018-01-04
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="使用Swift-PackageManager"><a href="#使用Swift-PackageManager" class="headerlink" title="使用Swift PackageManager"></a>使用Swift PackageManager</h2><p>swift package init –type executable </p>
-<p>Package.swift  </p>
-<p>swift.build 编译 </p>
-<p>swift package generate-xcodeproj</p>
-
-          
+          <h3 id="1-开篇"><a href="#1-开篇" class="headerlink" title="1. 开篇"></a>1. 开篇</h3><p>有关iOS项目的模块化/组件化的探讨，在最近2年内被反复提及。模块化的解决方案也是层出不穷。很多方案都很优秀，尤其在OC语言的项目中，因其特有的<code>runtime</code>机制，可以做到模块彼此间相对无感的<code>register</code>过程。或者如<code>CTMediator</code>一样的，简单粗暴的用<code>category</code> + <code>Target-Action</code>的方式，就解决了。</p>
+<p>然而这些基于<code>runtime</code>方式的组件化解决方案，用在<code>swift</code>的项目上，总会有些不尽如人意的地方。<br></p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/01/19/Swift的模块化方式探解/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1530,6 +1385,152 @@
 
 
     
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://shayuan.me/2017/07/19/Moya-HandyJson实现缺失的网络数据层/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="shayuan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AceSha">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/07/19/Moya-HandyJson实现缺失的网络数据层/" itemprop="url">Moya+HandyJSON实现缺失的网络数据层</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-19T17:19:15+08:00">
+                2017-07-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Swift/" itemprop="url" rel="index">
+                    <span itemprop="name">Swift</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作:"></a>准备工作:</h2><h3 id="所用到的库"><a href="#所用到的库" class="headerlink" title="所用到的库:"></a>所用到的库:</h3><ul>
+<li><a href="https://github.com/Moya/Moya" target="_blank" rel="external">Moya</a></li>
+<li><a href="https://github.com/Alamofire/Alamofire" target="_blank" rel="external">Alamofire</a></li>
+<li><a href="https://github.com/alibaba/HandyJSON" target="_blank" rel="external">HandyJSON</a> </li>
+<li><p><a href="https://github.com/ReactiveX/RxSwift" target="_blank" rel="external">RxSwift</a> </p>
+</li>
+<li><p>本文代码很多都是直接手写的，可能会有错误但不妨碍思维逻辑。</p>
+</li>
+</ul>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/07/19/Moya-HandyJson实现缺失的网络数据层/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
   </section>
 
   
@@ -1580,7 +1581,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-count">11</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

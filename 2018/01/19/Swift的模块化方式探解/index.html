@@ -99,7 +99,7 @@
 <meta property="og:url" content="http://shayuan.me/2018/01/19/Swift的模块化方式探解/index.html">
 <meta property="og:site_name" content="AceSha">
 <meta property="og:description" content="1. 开篇有关iOS项目的模块化/组件化的探讨，在最近2年内被反复提及。模块化的解决方案也是层出不穷。很多方案都很优秀，尤其在OC语言的项目中，因其特有的runtime机制，可以做到模块彼此间相对无感的register过程。或者如CTMediator一样的，简单粗暴的用category + Target-Action的方式，就解决了。 然而这些基于runtime方式的组件化解决方案，用在swift">
-<meta property="og:updated_time" content="2018-02-05T03:31:27.353Z">
+<meta property="og:updated_time" content="2018-02-05T03:36:31.026Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Swift项目的模块化方式探究">
 <meta name="twitter:description" content="1. 开篇有关iOS项目的模块化/组件化的探讨，在最近2年内被反复提及。模块化的解决方案也是层出不穷。很多方案都很优秀，尤其在OC语言的项目中，因其特有的runtime机制，可以做到模块彼此间相对无感的register过程。或者如CTMediator一样的，简单粗暴的用category + Target-Action的方式，就解决了。 然而这些基于runtime方式的组件化解决方案，用在swift">
@@ -349,7 +349,7 @@
 
       
         <h3 id="1-开篇"><a href="#1-开篇" class="headerlink" title="1. 开篇"></a>1. 开篇</h3><p>有关iOS项目的模块化/组件化的探讨，在最近2年内被反复提及。模块化的解决方案也是层出不穷。很多方案都很优秀，尤其在OC语言的项目中，因其特有的<code>runtime</code>机制，可以做到模块彼此间相对无感的<code>register</code>过程。或者如<code>CTMediator</code>一样的，简单粗暴的用<code>category</code> + <code>Target-Action</code>的方式，就解决了。</p>
-<p>然而这些基于<code>runtime</code>方式的组件化解决方案，用在<code>swift</code>的项目上，总会有些不尽如人意的地方。<br>比如你用router的方式，需要注册一些url，如果在OC项目中，可以直接在<code>+ load</code> 方法里写，程序在启动时都会调用到。然而在swift的类里，<code>+load</code>方法等都已经被废弃，所以你想注册的时候，又不可避免的要在<code>AppDelegate</code>的代理方法里面写很多<code>ModuleXXX.register()</code>这样的代码。<br>又比如你的模块A，想要获取App进入后台时候的回调，那就必须要暴露出一个接口，然后在你的壳项目的AppDelegate文件里面导入模块A，再调用响应接口。<br>再如<code>CTMediator</code>的方式，其实还是没有完全杜绝硬编码的情况，一些模块间的参数传递都是使用的字符串，而且<code>Target-Action</code>的方法命名也是着实的长，看着累。。</p>
+<p>然而这些基于<code>runtime</code>方式的组件化解决方案，用在<code>swift</code>的项目上，总会有些不尽如人意的地方。<br><a id="more"></a><br>比如你用router的方式，需要注册一些url，如果在OC项目中，可以直接在<code>+ load</code> 方法里写，程序在启动时都会调用到。然而在swift的类里，<code>+load</code>方法等都已经被废弃，所以你想注册的时候，又不可避免的要在<code>AppDelegate</code>的代理方法里面写很多<code>ModuleXXX.register()</code>这样的代码。<br>又比如你的模块A，想要获取App进入后台时候的回调，那就必须要暴露出一个接口，然后在你的壳项目的AppDelegate文件里面导入模块A，再调用响应接口。<br>再如<code>CTMediator</code>的方式，其实还是没有完全杜绝硬编码的情况，一些模块间的参数传递都是使用的字符串，而且<code>Target-Action</code>的方法命名也是着实的长，看着累。。</p>
 <h3 id="2-解决方案"><a href="#2-解决方案" class="headerlink" title="2. 解决方案"></a>2. 解决方案</h3><p>之于OC的方式，我们也希望Swift的项目也能达到如此灵活和优雅。传统的<code>runtime</code>方式不好解决，我们可以另辟蹊径的处理一下。</p>
 <p>本项目目前的解决方案就是在<code>Modularization</code>库里面，依然使用一个简单的OC类，在<code>+load</code>方法中，动态的将所有继承自<code>AppDelegateEntry</code>的类注册成实例。类似这样：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">@implementation _Load</div><div class="line"></div><div class="line">+ (void)load &#123;</div><div class="line">    [[Modularization shared] registerEntries];</div><div class="line">&#125;</div><div class="line"></div><div class="line">@end</div></pre></td></tr></table></figure>
@@ -420,8 +420,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/01/04/用swift编写命令行/" rel="next" title="用swift编写命令行">
-                <i class="fa fa-chevron-left"></i> 用swift编写命令行
+              <a href="/2017/12/15/RxSwift源码解析（一）/" rel="next" title="RxSwift源码解析（一）">
+                <i class="fa fa-chevron-left"></i> RxSwift源码解析（一）
               </a>
             
           </div>
@@ -501,7 +501,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-count">11</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
