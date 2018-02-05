@@ -973,7 +973,18 @@
 
       
         
-          <p>随笔<br></p>
+          <p>搭建记录：</p>
+<p>依赖：</p>
+<ul>
+<li>ruby </li>
+<li>rvm <code>curl -sSL https://get.rvm.io | bash -s stable --ruby</code></li>
+</ul>
+<p>Jenkins搭建环境：<a href="http://www.jianshu.com/p/41ecb06ae95f" target="_blank" rel="external">http://www.jianshu.com/p/41ecb06ae95f</a><br>加slave节点：<br><a href="http://blog.devzeng.com/blog/ios-ci-with-jenkins.html" target="_blank" rel="external">http://blog.devzeng.com/blog/ios-ci-with-jenkins.html</a></p>
+<p>Jenkins重启，关闭等操作：<a href="http://blog.csdn.net/itfootball/article/details/44876517" target="_blank" rel="external">http://blog.csdn.net/itfootball/article/details/44876517</a><br>url/safe-shutdown</p>
+<p>Jenkins卸载： /Library/Application Support/Jenkins/Uninstall.command  </p>
+<p>Jenkins默认端口8080，修改Jenkins默认端口命令为： java -jar jenkins.war –httpPort=9999</p>
+<p>Jenkins目前只支持到java8，安装java9会出错， java卸载 <a href="http://blog.csdn.net/haozhugogo/article/details/54809545" target="_blank" rel="external">http://blog.csdn.net/haozhugogo/article/details/54809545</a><br>ps： 需要手动删除java9</p>
+<p>可能会出现offline的错误，需要vpn联网。<br></p>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2017/10/10/Jenkins-Fastlane-SwiftLint/#more" rel="contents">
@@ -981,122 +992,6 @@
             </a>
           </div>
           <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://shayuan.me/2017/09/18/架构相关/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="shayuan">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="AceSha">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/09/18/架构相关/" itemprop="url">架构相关</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-18T11:25:58+08:00">
-                2017-09-18
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="关于单例"><a href="#关于单例" class="headerlink" title="关于单例"></a>关于单例</h2><ul>
-<li>单例应该只用来保存全局的状态，并且不能和任何作用域绑定。</li>
-<li>理想的实现方式1：使用 AppDelegate(单例)保存属性(SingletonSet)， 在set下保存需要使用的实例，方便reset且有作用域限制。</li>
-<li>理想的实现方式2：依赖注入，显式声明。</li>
-</ul>
-
-          
         
       
     </div>
@@ -1256,7 +1151,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://shayuan.me/2017/07/26/RxSwift学习/">
+    <link itemprop="mainEntityOfPage" href="http://shayuan.me/2017/07/14/Mac使用Hexo搭建博客/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="shayuan">
@@ -1275,7 +1170,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/07/26/RxSwift学习/" itemprop="url">RxSwift学习</a></h1>
+                <a class="post-title-link" href="/2017/07/14/Mac使用Hexo搭建博客/" itemprop="url">Mac使用Hexo搭建博客</a></h1>
         
 
         <div class="post-meta">
@@ -1287,8 +1182,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-26T14:01:49+08:00">
-                2017-07-26
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-14T11:35:56+08:00">
+                2017-07-14
               </time>
             
 
@@ -1310,8 +1205,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Swift/" itemprop="url" rel="index">
-                    <span itemprop="name">Swift</span>
+                  <a href="/categories/前端/" itemprop="url" rel="index">
+                    <span itemprop="name">前端</span>
                   </a>
                 </span>
 
@@ -1345,156 +1240,16 @@
 
       
         
-          <p>##RxSwift使用与学习中的一些理解示例。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/07/26/RxSwift学习/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://shayuan.me/2017/07/19/Moya-HandyJson实现缺失的网络数据层/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="shayuan">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="AceSha">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/07/19/Moya-HandyJson实现缺失的网络数据层/" itemprop="url">Moya+HandyJSON实现缺失的网络数据层</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-19T17:19:15+08:00">
-                2017-07-19
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Swift/" itemprop="url" rel="index">
-                    <span itemprop="name">Swift</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作:"></a>准备工作:</h2><h3 id="所用到的库"><a href="#所用到的库" class="headerlink" title="所用到的库:"></a>所用到的库:</h3><ul>
-<li><a href="https://github.com/Moya/Moya" target="_blank" rel="external">Moya</a></li>
-<li><a href="https://github.com/Alamofire/Alamofire" target="_blank" rel="external">Alamofire</a></li>
-<li><a href="https://github.com/alibaba/HandyJSON" target="_blank" rel="external">HandyJSON</a> </li>
-<li><p><a href="https://github.com/ReactiveX/RxSwift" target="_blank" rel="external">RxSwift</a> </p>
-</li>
-<li><p>本文代码很多都是直接手写的，可能会有错误但不妨碍思维逻辑。</p>
-</li>
+          <h2 id="环境要求"><a href="#环境要求" class="headerlink" title="环境要求"></a>环境要求</h2><p>安装Hexo需要</p>
+<ul>
+<li><a href="https://nodejs.org/en/" target="_blank" rel="external">Node.js</a></li>
+<li><a href="https://git-scm.com" target="_blank" rel="external">Git</a></li>
 </ul>
+<p>Node.js在官网下载稳定安装包即可，Mac安装XCode后自带git。两者都具备后可参考<a href="https://hexo.io/docs/" target="_blank" rel="external">Hexo</a>官网详细安装步骤，或参照本文安装步骤。</p>
+<h3 id="安装Hexo"><a href="#安装Hexo" class="headerlink" title="安装Hexo"></a>安装Hexo</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ sudo npm install -g hexo #-g表示全局安装, npm默认为当前项目安装</div><div class="line">$ hexo version #查看</div></pre></td></tr></table></figure>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2017/07/19/Moya-HandyJson实现缺失的网络数据层/#more" rel="contents">
+            <a class="btn" href="/2017/07/14/Mac使用Hexo搭建博客/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1534,10 +1289,6 @@
   </section>
 
   
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
-  </nav>
-
 
 
           </div>
@@ -1581,7 +1332,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-count">8</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1592,7 +1343,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-count">1</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1603,7 +1354,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-count">5</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
